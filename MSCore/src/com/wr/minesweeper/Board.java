@@ -1,5 +1,7 @@
 package com.wr.minesweeper;
 
+import java.util.Random;
+
 public class Board
 {
     enum Level {EASY, MEDIUM, HARD, IMPOSSIBLE}
@@ -7,6 +9,8 @@ public class Board
     private int xTiles;
     private int yTiles;
     private int numMines;
+    private String name;
+    private Tile[][] tiles;
 
 //    todo add color attribute
 
@@ -15,6 +19,32 @@ public class Board
         this.xTiles = xTiles;
         this.yTiles = yTiles;
         this.numMines = numMines;
+        this.tiles= new Tile[xTiles][yTiles];
+
+        Random rand = new Random(System.currentTimeMillis());
+
+        for (int x = 0; x < xTiles; x++)
+        {
+            for (int y = 0; y < yTiles; y++)
+            {
+                boolean hasMine = false;
+//                todo hasMine based off of probablity
+                tiles [x][y] = new Tile(x, y, hasMine);
+            }
+        }
+
+    }
+
+
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public Level getLevel()
