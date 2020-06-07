@@ -25,6 +25,7 @@ public class Board
         Random rand = new Random(System.currentTimeMillis());
 
         int counter = 0;
+
         while(counter < numMines)
         {
             for (int x = 0; x < xTiles; x++)
@@ -52,6 +53,11 @@ public class Board
         }
         System.out.println("Expected: " + numMines + " Placed: " + counter);
 
+    }
+
+    public Tile getTile(int x, int y)
+    {
+        return tiles[x][y];
     }
 
 

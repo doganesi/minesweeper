@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MSApp_Terminal/MSApp_Terminal.iml" filepath="$PROJECT_DIR$/MSApp_Terminal/MSApp_Terminal.iml" />
       <module fileurl="file://$PROJECT_DIR$/MSCore/MSCore.iml" filepath="$PROJECT_DIR$/MSCore/MSCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/MSTest/MSTest.iml" filepath="$PROJECT_DIR$/MSTest/MSTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/minesweeper.iml" filepath="$PROJECT_DIR$/.idea/minesweeper.iml" />

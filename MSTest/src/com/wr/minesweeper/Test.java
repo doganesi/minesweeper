@@ -13,8 +13,10 @@ public class Test
 //            Board board = new Board(10, 5, numMines);
 //            System.out.println(board.getNumMines() + " - " + board.getLevel());
 //        }
-        Board board1 = new Board(10, 50, 1);
+
+        Board board1 = new Board(10, 6, 11);
         board1.setName("FirstBoard");
+        TerminalUtil.printBoard(board1);
 //        Board board2 = new Board(10, 5, 12);
 //        board2.setName("SecondBoarda[dflgp[flgsldf][pals;fg;");
 //        Board board3 = new Board(10, 5, 12);
@@ -24,5 +26,7 @@ public class Test
 //            System.out.println("Number of mines is " + mineNumber);
 
     }
+
+
 
 }
