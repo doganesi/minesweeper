@@ -14,7 +14,7 @@ public class Test
 //            System.out.println(board.getNumMines() + " - " + board.getLevel());
 //        }
 
-        Board board1 = new Board(10, 6, 11);
+        Board board1 = new Board(8, 7, 3);
         board1.setName("FirstBoard");
         TerminalUtil.printBoard(board1);
 //        Board board2 = new Board(10, 5, 12);
