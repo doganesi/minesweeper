@@ -16,7 +16,7 @@ public class Test
 
         Board board1 = new Board(8, 7, 3);
         board1.setName("FirstBoard");
-        TerminalUtil.printBoard(board1);
+        TerminalUtil.printBoard2(board1);
 //        Board board2 = new Board(10, 5, 12);
 //        board2.setName("SecondBoarda[dflgp[flgsldf][pals;fg;");
 //        Board board3 = new Board(10, 5, 12);
