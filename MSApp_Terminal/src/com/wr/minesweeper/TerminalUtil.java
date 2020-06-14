@@ -1,52 +1,102 @@
 package com.wr.minesweeper;
 
-import java.lang.reflect.Array;
-
 public class TerminalUtil
 {
-    public static interface ArrayCellHandler
+    enum BorderType
+    {SINGLE, DOUBLE}
+
+
+
+    public interface CharArrayCellHandler
     {
+        /**
+         * Handle method will called from methods that ietrate over 2-dimensional char arrays
+         *
+         * @param currentValue value in the array cell
+         * @param x x coordinate of the array cell
+         * @param y y coordinate of the array cell
+         * @param maxX maximum x coordinate of the array (e.g. if the width of the array is 20, maxX = 19 because X coordinate in the array goes from 0 to width-1)
+         * @param maxY maximum y coordinate of the array (e.g. if the height of the array is 20, maxY = 19 because Y coordinate in the array goes from 0 to height-1)
+         * @return the job of the function is to return the char value that will be written into the array cell
+         */
         char handle(char currentValue, int x, int y, int maxX, int maxY);
     }
 
-    public static class BorderCellHandler implements ArrayCellHandler
+    public static class StarBorderCellHandler implements CharArrayCellHandler
     {
+        char borderCharacter;
+
+        public StarBorderCellHandler()
+        {
+            this('*');
+        }
+        public StarBorderCellHandler(char borderCharacter)
+        {
+            this.borderCharacter = borderCharacter;
+        }
+
+        @Override
+        public char handle(char currentValue, int x, int y, int maxX, int maxY)
+        {
+            if (x == 0 || y == 0 || x == maxX || y == maxY)
+            {
+                return borderCharacter;
+            }
+            throw new RuntimeException("(" + x + ", " + y + ") is a cell not on the border -- no idea how to handle it!!");
+        }
+    }
+
+    public static class BorderCellHandler implements CharArrayCellHandler
+    {
+        BorderType borderType;
+
+        public BorderCellHandler()
+        {
+            this(BorderType.SINGLE);
+        }
+
+        public BorderCellHandler(BorderType borderType)
+        {
+            this.borderType = borderType;
+        }
+
         @Override
         public char handle(char currentValue, int x, int y, int maxX, int maxY)
         {
             if (x == 0 && y == 0)
             {
                 // inner rim top left
-                return '┌';
+                return borderType == BorderType.SINGLE ? '┌' : '╔';
             }
             else if (x == maxX && y == 0)
             {
                 // inner rim top right
-                return '┐';
+                return borderType == BorderType.SINGLE ? '┐' : '╗';
             }
             else if (x == maxX && y == maxY)
             {
                 // inner rim bottom right
-                return '┘';
+                return borderType == BorderType.SINGLE ? '┘' : '╝';
             }
             else if (x == 0 && y == maxY)
             {
                 // inner rim bottom left
-                return '└';
+                return borderType == BorderType.SINGLE  ?'└' : '╚';
             }
             else if (x == 0 || x == maxX)
             {
-                return '|';
+                return borderType == BorderType.SINGLE  ? '|' : '║';
             }
             else if (y == 0 || y == maxY)
             {
-                return '-';
+                return borderType == BorderType.SINGLE ? '-' : '═';
             }
-            return ' ';
+            throw new RuntimeException("(" + x + ", " + y + ") is a cell not on the border -- no idea how to handle it!!");
+
         }
     }
 
-    public static void iterate2DimensionalArray(char[][] arr, ArrayCellHandler arrayCellHandler)
+    public static void iterate2DCharArray(char[][] arr, CharArrayCellHandler arrayCellHandler)
     {
         int maxX = arr.length;
         int maxY = arr[0].length;
@@ -59,14 +109,14 @@ public class TerminalUtil
         }
     }
 
-    public static char[][] wrapBoard(char[][] sourceBoard, ArrayCellHandler arrayCellHandler)
+    public static char[][] wrapBoard(char[][] sourceBoard, CharArrayCellHandler arrayCellHandler)
     {
         int sourceBoardX = sourceBoard.length;
         int sourceBoardY = sourceBoard[0].length;
         int wrappedBoardX = sourceBoardX + 2;
         int wrappedBoardY = sourceBoardY + 2;
         char[][] wrappedBoard = new char[wrappedBoardX][wrappedBoardY];
-        iterate2DimensionalArray(wrappedBoard, new ArrayCellHandler()
+        iterate2DCharArray(wrappedBoard, new CharArrayCellHandler()
         {
             @Override
             public char handle(char currentValue, int x, int y, int maxX, int maxY)
@@ -90,7 +140,8 @@ public class TerminalUtil
     public static void printBoard2(Board board)
     {
         char[][] baseBoard = new char[board.getXTiles()][board.getYTiles()];
-        iterate2DimensionalArray(baseBoard, new ArrayCellHandler()
+
+        iterate2DCharArray(baseBoard, new CharArrayCellHandler()
         {
             @Override
             public char handle(char currentValue, int x, int y, int maxX, int maxY)
@@ -111,9 +162,10 @@ public class TerminalUtil
             }
         });
 
-        char[][] borderBoard = wrapBoard(baseBoard, new BorderCellHandler());
 
-        char[][] numbersBoard = wrapBoard(borderBoard, new ArrayCellHandler()
+        char[][] borderBoard = wrapBoard(baseBoard, new BorderCellHandler(BorderType.SINGLE));
+
+        char[][] numbersBoard = wrapBoard(borderBoard, new CharArrayCellHandler()
         {
             @Override
             public char handle(char currentValue, int x, int y, int maxX, int maxY)
@@ -148,8 +200,9 @@ public class TerminalUtil
 
         char[][] borderBoard2 = wrapBoard(numbersBoard, new BorderCellHandler());
         char[][] borderBoard3 = wrapBoard(borderBoard2, new BorderCellHandler());
+        char[][] borderBoard4 = wrapBoard(borderBoard3, new StarBorderCellHandler());
 
-        iterate2DimensionalArray(borderBoard3, new ArrayCellHandler()
+        iterate2DCharArray(borderBoard4, new CharArrayCellHandler()
         {
             @Override
             public char handle(char currentValue, int x, int y, int maxX, int maxY)
@@ -171,7 +224,7 @@ public class TerminalUtil
         {
             for (int x = 0; x < board.getXTiles() + 4; x++)
             {
-                char c = ' ';
+                char c;
                 if (x == 0 && y == 0)
                 {
                     //outer rim top left
