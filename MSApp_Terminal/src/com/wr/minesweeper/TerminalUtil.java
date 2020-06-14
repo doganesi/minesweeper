@@ -2,11 +2,6 @@ package com.wr.minesweeper;
 
 public class TerminalUtil
 {
-    enum BorderType
-    {SINGLE, DOUBLE}
-
-
-
     public interface CharArrayCellHandler
     {
         /**
@@ -20,30 +15,6 @@ public class TerminalUtil
          * @return the job of the function is to return the char value that will be written into the array cell
          */
         char handle(char currentValue, int x, int y, int maxX, int maxY);
-    }
-
-    public static class StarBorderCellHandler implements CharArrayCellHandler
-    {
-        char borderCharacter;
-
-        public StarBorderCellHandler()
-        {
-            this('*');
-        }
-        public StarBorderCellHandler(char borderCharacter)
-        {
-            this.borderCharacter = borderCharacter;
-        }
-
-        @Override
-        public char handle(char currentValue, int x, int y, int maxX, int maxY)
-        {
-            if (x == 0 || y == 0 || x == maxX || y == maxY)
-            {
-                return borderCharacter;
-            }
-            throw new RuntimeException("(" + x + ", " + y + ") is a cell not on the border -- no idea how to handle it!!");
-        }
     }
 
     public static class BorderCellHandler implements CharArrayCellHandler
@@ -66,30 +37,30 @@ public class TerminalUtil
             if (x == 0 && y == 0)
             {
                 // inner rim top left
-                return borderType == BorderType.SINGLE ? '┌' : '╔';
+                return borderType.getUpperLeft();
             }
             else if (x == maxX && y == 0)
             {
                 // inner rim top right
-                return borderType == BorderType.SINGLE ? '┐' : '╗';
+                return borderType.getUpperRight();
             }
             else if (x == maxX && y == maxY)
             {
                 // inner rim bottom right
-                return borderType == BorderType.SINGLE ? '┘' : '╝';
+                return borderType.getLowerRight();
             }
             else if (x == 0 && y == maxY)
             {
                 // inner rim bottom left
-                return borderType == BorderType.SINGLE  ?'└' : '╚';
+                return borderType.getLowerLeft();
             }
             else if (x == 0 || x == maxX)
             {
-                return borderType == BorderType.SINGLE  ? '|' : '║';
+                return borderType.getVertical();
             }
             else if (y == 0 || y == maxY)
             {
-                return borderType == BorderType.SINGLE ? '-' : '═';
+                return borderType.getHorizontal();
             }
             throw new RuntimeException("(" + x + ", " + y + ") is a cell not on the border -- no idea how to handle it!!");
 
@@ -198,9 +169,9 @@ public class TerminalUtil
             }
         });
 
-        char[][] borderBoard2 = wrapBoard(numbersBoard, new BorderCellHandler());
-        char[][] borderBoard3 = wrapBoard(borderBoard2, new BorderCellHandler());
-        char[][] borderBoard4 = wrapBoard(borderBoard3, new StarBorderCellHandler());
+        char[][] borderBoard2 = wrapBoard(numbersBoard, new BorderCellHandler(BorderType.SINGLE));
+        char[][] borderBoard3 = wrapBoard(borderBoard2, new BorderCellHandler(new BorderType('*','*', '*', '*', '-', '|')));
+        char[][] borderBoard4 = wrapBoard(borderBoard3, new BorderCellHandler(new BorderType('*')));
 
         iterate2DCharArray(borderBoard4, new CharArrayCellHandler()
         {
