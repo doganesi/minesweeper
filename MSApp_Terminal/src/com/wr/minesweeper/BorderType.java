@@ -2,7 +2,7 @@ package com.wr.minesweeper;
 
 public class BorderType
 {
-    public static final BorderType SINGLE = new BorderType('┌','┐', '└', '┘', '-', '|');
+    public static final BorderType SINGLE = new BorderType('┌','┐', '└', '┘', '─', '|');
     public static final BorderType DOUBLE = new BorderType('╔','╗', '╚', '╝', '═', '║');
 
     private char upperLeft;

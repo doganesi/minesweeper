@@ -1,7 +1,5 @@
 package com.wr.minesweeper;
 
-import java.util.Random;
-
 public class Test
 {
     public static void main(String[] args)
@@ -14,9 +12,9 @@ public class Test
 //            System.out.println(board.getNumMines() + " - " + board.getLevel());
 //        }
 
-        Board board1 = new Board(9, 9, 3);
+        Board board1 = new Board(50, 20, 17);
         board1.setName("FirstBoard");
-        TerminalUtil.printBoard2(board1);
+        TerminalUtil.printBoard(board1);
 //        Board board2 = new Board(10, 5, 12);
 //        board2.setName("SecondBoarda[dflgp[flgsldf][pals;fg;");
 //        Board board3 = new Board(10, 5, 12);

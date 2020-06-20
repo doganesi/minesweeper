@@ -67,6 +67,68 @@ public class TerminalUtil
         }
     }
 
+    public static class NumberBorderCellHandler implements CharArrayCellHandler
+    {
+        private int level;
+        private int maxLevel;
+
+        public NumberBorderCellHandler(int level, int maxLevel)
+        {
+            this.level = level;
+            this.maxLevel = maxLevel;
+        }
+
+        private char getOrderChar(int actualIndex, int order)
+        {
+            int remainder = actualIndex % order;
+            int result = actualIndex / order;
+            if (result > 9)
+            {
+                result = result % 10;
+            }
+            return remainder == 0 ? (char) (48 + result) : ' ';
+        }
+
+        @Override
+        public char handle(char currentValue, int x, int y, int maxX, int maxY)
+        {
+            if (x == 0 && y > level && y < maxY - level)
+            {
+                return getOrderChar(y - level, (int) Math.pow(10, level - 1));
+            }
+            else if (x == maxX && y > level && y < maxY - level)
+            {
+                return getOrderChar(y - level, (int) Math.pow(10, maxLevel - level));
+            }
+            else if (y == 0 && x > level && x < maxX - level)
+            {
+                return getOrderChar(x - level, (int) Math.pow(10, (level - 1)));
+            }
+            else if (y == maxY && x > level && x < maxX - level)
+            {
+                return getOrderChar(x - level, (int) Math.pow(10, maxLevel - level));
+            }
+            else
+            {
+                return ' ';
+            }
+        }
+    }
+    public static class PrintCellHandler implements CharArrayCellHandler
+    {
+        @Override
+        public char handle(char currentValue, int x, int y, int maxX, int maxY)
+        {
+            System.out.print(currentValue);
+            if (x == maxX)
+            {
+                System.out.print('\n');
+            }
+            return currentValue;
+        }
+    }
+
+
     public static void iterate2DCharArray(char[][] arr, CharArrayCellHandler arrayCellHandler)
     {
         int maxX = arr.length;
@@ -80,7 +142,13 @@ public class TerminalUtil
         }
     }
 
-    public static char[][] wrapBoard(char[][] sourceBoard, CharArrayCellHandler arrayCellHandler)
+    /**
+     *
+     * @param sourceBoard
+     * @param borderCellHandler
+     * @return
+     */
+    public static char[][] wrapBoard(char[][] sourceBoard, CharArrayCellHandler borderCellHandler)
     {
         int sourceBoardX = sourceBoard.length;
         int sourceBoardY = sourceBoard[0].length;
@@ -101,14 +169,14 @@ public class TerminalUtil
                 {
                     // we are dealing with one of the cells of the rim
                     // we will ask the outerRimCell filler to tell us what character to place there
-                    return arrayCellHandler.handle(currentValue, x, y, maxX, maxY);
+                    return borderCellHandler.handle(currentValue, x, y, maxX, maxY);
                 }
             }
         });
         return wrappedBoard;
     }
 
-    public static void printBoard2(Board board)
+    public static void printBoard(Board board)
     {
         char[][] baseBoard = new char[board.getXTiles()][board.getYTiles()];
 
@@ -132,193 +200,12 @@ public class TerminalUtil
                 }
             }
         });
-
-
         char[][] borderBoard = wrapBoard(baseBoard, new BorderCellHandler(BorderType.SINGLE));
-
-        char[][] numbersBoard = wrapBoard(borderBoard, new CharArrayCellHandler()
-        {
-            @Override
-            public char handle(char currentValue, int x, int y, int maxX, int maxY)
-            {
-                if (y == 0 && (x < 2 || x > maxX - 2))
-                {
-                    return ' ';
-                }
-                else if (y == maxY && (x < 2 || x > maxX - 2))
-                {
-                    return ' ';
-                }
-                else if (x == 0 && (y < 2 || y > maxY - 2))
-                {
-                    return ' ';
-                }
-                else if (x == maxX && (y < 2 || y > maxY - 2))
-                {
-                    return ' ';
-                }
-                else if (x == 0 || x == maxX)
-                {
-                    return (char) (47+y);
-                }
-                else if (y == 0 || y == maxY)
-                {
-                    return (char) (47+x);
-                }
-                return currentValue;
-            }
-        });
-
-        char[][] borderBoard2 = wrapBoard(numbersBoard, new BorderCellHandler(BorderType.SINGLE));
-        char[][] borderBoard3 = wrapBoard(borderBoard2, new BorderCellHandler(new BorderType('*','*', '*', '*', '-', '|')));
-        char[][] borderBoard4 = wrapBoard(borderBoard3, new BorderCellHandler(new BorderType('*')));
-
-        iterate2DCharArray(borderBoard4, new CharArrayCellHandler()
-        {
-            @Override
-            public char handle(char currentValue, int x, int y, int maxX, int maxY)
-            {
-                System.out.print(currentValue);
-                if (x == maxX)
-                {
-                    System.out.print('\n');
-                }
-                return currentValue;
-            }
-        });
+        char[][] numbersBoard = wrapBoard(borderBoard, new NumberBorderCellHandler(1, 2));
+        char[][] numbersBoard2 = wrapBoard(numbersBoard, new NumberBorderCellHandler(2, 2));
+//        char[][] numbersBoard3 = wrapBoard(numbersBoard2, new NumberBorderCellHandler(3, 3));
+        char[][] borderBoard2 = wrapBoard(numbersBoard2, new BorderCellHandler(BorderType.DOUBLE));
+        iterate2DCharArray(borderBoard2, new PrintCellHandler());
     }
 
-    public static void printBoard(Board board)
-    {
-        char[][] boardPrintout = new char[board.getXTiles()+4][board.getYTiles()+4];
-        for (int y = 0; y < board.getYTiles() + 4; y++)
-        {
-            for (int x = 0; x < board.getXTiles() + 4; x++)
-            {
-                char c;
-                if (x == 0 && y == 0)
-                {
-                    //outer rim top left
-                    c = ' ';
-                }
-                else if (x == board.getXTiles() + 3 && y == 0)
-                {
-                    //outer rim top right
-                    c = ' ';
-                }
-                else if (x == board.getXTiles() + 3 && y == board.getYTiles() + 3)
-                {
-                    // outer rim bottom right
-                    c = ' ';
-                }
-                else if (x == 0 && y == board.getYTiles() + 3)
-                {
-                    // outer rim bottom left
-                    c = ' ';
-                }
-                else if (y == 0 && (x == 1 || x == board.getXTiles() + 2))
-                {
-                    // outer rim top gaps
-                    c = ' ';
-                }
-                else if (y == 0)
-                {
-                    // outer rim top numbers
-                    c = (char) (47+x);
-                }
-                else if (x == 0 && (y == 1 || y == board.getYTiles() + 2))
-                {
-                    // outer rim left gaps
-                    c = ' ';
-                }
-                else if (x == 0)
-                {
-                    // outer rim left numbers
-                    c = (char) (47+y);
-                }
-                else if (x == board.getXTiles() + 3 && (y == 1 || y == board.getYTiles() + 2))
-                {
-                    // outer rim right gaps
-                    c = ' ';
-                }
-                else if (x == board.getXTiles() + 3)
-                {
-                    // outer rim right numbers
-                    c = (char) (47+y);
-                }
-                else if (y == board.getYTiles() + 3 && (x == 1 || x == board.getXTiles() + 2))
-                {
-                    // outer rim bottom gaps
-                    c = ' ';
-                }
-                else if (y == board.getYTiles() + 3)
-                {
-                    // outer rim bottom numbers
-                    c = (char) (47+x);
-                }
-                else if (x == 1 && y == 1)
-                {
-                    // inner rim top left
-                    c = '┌';
-                }
-                else if (x == board.getXTiles() + 2 && y == 1)
-                {
-                    // inner rim top right
-                    c = '┐';
-                }
-                else if (x == board.getXTiles() + 2 && y == board.getYTiles() + 2)
-                {
-                    // inner rim bottom right
-                    c = '┘';
-                }
-                else if (x == 1 && y == board.getYTiles() + 2)
-                {
-                    // inner rim bottom left
-                    c = '└';
-                }
-                else if (y == 1)
-                {
-                    // inner rim top border
-                    c = '-';
-                }
-                else if (x == 1)
-                {
-                    // inner rim left border
-                    c = '|';
-                }
-                else if (x == board.getXTiles() + 2)
-                {
-                    // inner rim right border
-                    c = '|';
-                }
-                else if (y == board.getYTiles() + 2)
-                {
-                    // inner rim bottom border
-                    c = '-';
-                }
-                else
-                {
-                    // if we are here, it means that
-                    // this is an actual board tile (not a border)
-                    int actualBoardX = x - 2;
-                    int actualBoardY = y - 2;
-                    Tile currentTile = board.getTile(actualBoardX, actualBoardY);
-                    if (currentTile == null)
-                    {
-                        c = 'E';
-                    }
-                    else if (currentTile.isHasMine())
-                    {
-                        c = '*';
-                    }
-                    else
-                    {
-                        c = '\u25A1';
-                    }
-                }
-                System.out.print(c);
-            }
-            System.out.print('\n');
-        }
-    }
 }
