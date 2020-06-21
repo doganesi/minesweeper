@@ -12,9 +12,10 @@ public class Test
 //            System.out.println(board.getNumMines() + " - " + board.getLevel());
 //        }
 
-        Board board1 = new Board(50, 20, 17);
+        Board board1 = new Board(7, 5, 1);
         board1.setName("FirstBoard");
-        TerminalUtil.printBoard(board1);
+        DesktopUtil.drawBoard(board1);
+//        TerminalUtil.printBoard(board1);
 //        Board board2 = new Board(10, 5, 12);
 //        board2.setName("SecondBoarda[dflgp[flgsldf][pals;fg;");
 //        Board board3 = new Board(10, 5, 12);

@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="MSCore" />
     <orderEntry type="module" module-name="MSApp_Terminal" />
+    <orderEntry type="module" module-name="MSApp_Desktop" />
   </component>
 </module>
