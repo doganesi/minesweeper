@@ -19,4 +19,23 @@ public class DesktopUtil
         mainFrame.pack();
 
     }
+
+    public static void drawBoards(Board[] boards)
+    {
+        JFrame mainFrame = new JFrame("Minesweeper");
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ScrollPane sp = new ScrollPane();
+        mainFrame.getContentPane().add(sp);
+        JPanel boardContainer = new JPanel();
+
+        for (int i = 0; i < boards.length; i++)
+        {
+            Board board = boards[i];
+            BoardComponent boardComponent = new BoardComponent(board, 50);
+            boardContainer.add(boardComponent);
+        }
+        sp.add(boardContainer);
+        mainFrame.setSize(new Dimension(600, 600));
+        mainFrame.setVisible(true);
+    }
 }

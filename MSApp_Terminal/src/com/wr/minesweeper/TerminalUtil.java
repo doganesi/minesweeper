@@ -1,4 +1,7 @@
 package com.wr.minesweeper;
+import com.wr.minesweeper.Tile;
+
+import java.awt.*;
 
 public class TerminalUtil
 {
@@ -71,6 +74,7 @@ public class TerminalUtil
     {
         private int level;
         private int maxLevel;
+
 
         public NumberBorderCellHandler(int level, int maxLevel)
         {
@@ -190,14 +194,19 @@ public class TerminalUtil
                 {
                     return 'E';
                 }
-                else if (currentTile.isHasMine())
+                else if (currentTile.getBoard().getGameState() == Board.GameState.OVER && currentTile.isHasMine())
                 {
                     return '*';
+                }
+                else if (currentTile.getTileState() == Tile.State.FLAGGED)
+                {
+                    return 'F';
                 }
                 else
                 {
                     return '\u25A1';
                 }
+
             }
         });
         char[][] borderBoard = wrapBoard(baseBoard, new BorderCellHandler(BorderType.SINGLE));

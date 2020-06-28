@@ -1,29 +1,42 @@
 package com.wr.minesweeper;
 
+import com.wr.util.RandUtil;
+
 import java.util.Random;
 
 public class Board
 {
-    enum Level
-    {EASY, MEDIUM, HARD, IMPOSSIBLE}
+    public enum GameState {RUNNING, OVER}
+//    public enum Difficulty  {EASY, MEDIUM, HARD, EXTREME, IMPOSSIBLE}
 
     private int xTiles;
     private int yTiles;
     private int numMines;
     private String name;
     private Tile[][] tiles;
+    private GameState gameState = GameState.RUNNING;
 
 //    todo add color attribute
+
+    public Board(Difficulty difficulty)
+    {
+        this.xTiles = difficulty.getMinWidth() + RandUtil.nextInt(difficulty.getMaxWidth()-difficulty.getMinWidth());
+        this.yTiles = difficulty.getMinHeight() + RandUtil.nextInt(difficulty.getMaxHeight()-difficulty.getMinHeight());
+        this.numMines = (int) (difficulty.getBombRatio()*getXTiles()*getYTiles());
+        initBoard();
+    }
 
     public Board(int xTiles, int yTiles, int numMines)
     {
         this.xTiles = xTiles;
         this.yTiles = yTiles;
         this.numMines = numMines;
+        initBoard();
+    }
+
+    private void initBoard()
+    {
         this.tiles = new Tile[xTiles][yTiles];
-
-        Random rand = new Random(System.currentTimeMillis());
-
         int counter = 0;
 
         while(counter < numMines)
@@ -38,21 +51,20 @@ public class Board
                     }
 
                     double mineProbability = numMines * 1.0 / getNumTiles();
-                    double randomNumber = rand.nextDouble();
+                    double randomNumber = RandUtil.nextDouble();
                     boolean hasMine = false;
                     if (randomNumber <= mineProbability && counter < numMines)
                     {
                         hasMine = true;
                         counter++;
                     }
-                    tiles[x][y] = new Tile(x, y, hasMine);
+                    tiles[x][y] = new Tile(this, x, y, hasMine);
                 }
             }
-            System.out.println("Loop");
+//            System.out.println("Loop");
 
         }
         System.out.println("Expected: " + numMines + " Placed: " + counter);
-
     }
 
     public Tile getTile(int x, int y)
@@ -71,20 +83,40 @@ public class Board
         this.name = name;
     }
 
-    public Level getLevel()
+
+
+    public Difficulty getDifficulty()
     {
+
         double percentMines = numMines * 100.0 / getNumTiles();
-        if (percentMines < 15)
+        for (int i = 0; i < Difficulty.DIFFICULTY_LEVELS.length; i++)
         {
-            return Level.EASY;
-        } else if (percentMines < 25)
-        {
-            return Level.MEDIUM;
-        } else if (percentMines < 40)
-        {
-            return Level.HARD;
+            Difficulty dif = Difficulty.DIFFICULTY_LEVELS[i];
+            if (percentMines < dif.getBombRatio())
+            {
+                return dif;
+            }
         }
-        return Level.IMPOSSIBLE;
+        if (percentMines < 10)
+        {
+            return Difficulty.EASY;
+        }
+        else if (percentMines < 15)
+        {
+            return Difficulty.MEDIUM;
+        }
+        else if (percentMines < 20)
+        {
+            return Difficulty.HARD;
+        }
+        else if (percentMines < 25)
+        {
+            return Difficulty.EXTREME;
+        }
+        else
+        {
+            return Difficulty.IMPOSSIBLE;
+        }
     }
 
     public int getNumTiles()
@@ -123,4 +155,13 @@ public class Board
         this.numMines = numMines;
     }
 
+    public GameState getGameState()
+    {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState)
+    {
+        this.gameState = gameState;
+    }
 }
