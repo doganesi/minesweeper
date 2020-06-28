@@ -18,8 +18,6 @@ public class Difficulty
     private int maxHeight;
     private String name;
 
-
-
     public Difficulty (String name, double bombRatio, int minWidth, int maxWidth, int minHeight, int maxHeight)
     {
         this.bombRatio = bombRatio;

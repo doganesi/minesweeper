@@ -2,12 +2,9 @@ package com.wr.minesweeper;
 
 import com.wr.util.RandUtil;
 
-import java.util.Random;
-
 public class Board
 {
     public enum GameState {RUNNING, OVER}
-//    public enum Difficulty  {EASY, MEDIUM, HARD, EXTREME, IMPOSSIBLE}
 
     private int xTiles;
     private int yTiles;

@@ -2,11 +2,20 @@ package com.wr.minesweeper;
 
 import com.wr.util.RandUtil;
 
-import java.util.Random;
-
 public class Test
 {
     public static void main(String[] args)
+    {
+        test_3();
+    }
+
+    private static void test_3()
+    {
+        MSMainApp_Terminal mainApp = new MSMainApp_Terminal();
+        mainApp.start();
+    }
+
+    private static void test_2()
     {
         // Generate 20 boards (use loop)
         // we only want MEDIUM, HARD or EXTREME (randomly)
@@ -29,10 +38,10 @@ public class Test
         }
 
         DesktopUtil.drawBoards(boardArray);
+    }
 
-
-
-
+    private static void test_1()
+    {
 //        Random rand = new Random(System.currentTimeMillis());
 //        for (int i = 0; i < 100; i++)
 //        {
@@ -57,7 +66,6 @@ public class Test
 //        Board board4 = new Board(10, 5, 12);
 //        int mineNumber = numMines;
 //            System.out.println("Number of mines is " + mineNumber);
-
     }
 
 
