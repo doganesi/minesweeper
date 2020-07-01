@@ -2,5 +2,5 @@ package com.wr.util.menu;
 
 public interface IMenuItemCommand
 {
-    void runCommand();
+    void runCommand(ApplicationMenuItem menuItem);
 }

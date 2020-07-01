@@ -1,4 +1,4 @@
-package com.wr.minesweeper;
+package com.wr.util.array;
 
 public class BorderType
 {

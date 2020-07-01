@@ -32,4 +32,9 @@ public class ApplicationMenu
     {
         this.menuItems = menuItems;
     }
+
+    public void addMenuItem(ApplicationMenuItem menuItem)
+    {
+        menuItems.add(menuItem);
+    }
 }
