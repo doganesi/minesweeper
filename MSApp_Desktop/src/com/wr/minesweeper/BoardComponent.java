@@ -1,4 +1,4 @@
-package com.wr.minesweeper.desktop;
+package com.wr.minesweeper;
 
 import com.wr.minesweeper.Board;
 import com.wr.minesweeper.Tile;

@@ -2,13 +2,16 @@ package com.wr.minesweeper;
 
 import com.wr.util.menu.*;
 
-public class MSMainApp_Terminal
+import javax.swing.*;
+import java.awt.*;
+
+public class MSMainApp_Desktop
 {
     private ApplicationMenu mainMenu = new ApplicationMenu("Minesweeper Game");
     private ApplicationMenu funMenu = new ApplicationMenu("Fun menu");
     private ApplicationMenu selectDifficultyMenu = new ApplicationMenu("Select Difficulty Level");
 
-    public MSMainApp_Terminal()
+    public MSMainApp_Desktop()
     {
 
         // configure selectDifficultyMenu
@@ -43,7 +46,18 @@ public class MSMainApp_Terminal
 
     public void start()
     {
-        TerminalMenuUtil.showMenu(mainMenu);
+        JFrame mainFrame = new JFrame("Minesweeper");
+        mainFrame.setSize(new Dimension(550, 250));
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JMenuBar menuBar = new JMenuBar();
+        mainFrame.setJMenuBar(menuBar);
+
+        menuBar.add(DesktopMenuUtil.getJMenu(mainFrame, null, mainMenu));
+
+//        BoardComponent boardComponent = new BoardComponent(board, 50);
+//        mainFrame.getContentPane().add(boardComponent);
+        mainFrame.setVisible(true);
+//        mainFrame.pack();
     }
 
 }

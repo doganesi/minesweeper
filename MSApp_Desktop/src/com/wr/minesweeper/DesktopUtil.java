@@ -1,7 +1,5 @@
 package com.wr.minesweeper;
 
-import com.wr.minesweeper.desktop.BoardComponent;
-
 import javax.swing.*;
 import java.awt.*;
 

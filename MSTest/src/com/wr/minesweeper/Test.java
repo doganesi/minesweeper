@@ -11,8 +11,12 @@ public class Test
 
     private static void test_3()
     {
-        MSMainApp_Terminal mainApp = new MSMainApp_Terminal();
-        mainApp.start();
+//        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
+//        mainApp_Terminal.start();
+
+        MSMainApp_Desktop mainApp_Desktop = new MSMainApp_Desktop();
+        mainApp_Desktop.start();
+
     }
 
     private static void test_2()
