@@ -1,10 +1,9 @@
 package com.wr.minesweeper;
 
-import com.wr.minesweeper.Board;
-import com.wr.minesweeper.Tile;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class BoardComponent extends JComponent
 {
@@ -12,6 +11,7 @@ public class BoardComponent extends JComponent
     private int widthPX;
     private int heightPX;
     private Board board;
+    private TileDrawer tileDrawer = new TileDrawer();
 
 
     public BoardComponent(Board board, int tileSizePX)
@@ -20,6 +20,27 @@ public class BoardComponent extends JComponent
         this.tileSizePX = tileSizePX;
         widthPX = board.getXTiles() * tileSizePX;
         heightPX = board.getYTiles() * tileSizePX;
+        addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                flagTile(e.getX(), e.getX());
+            }
+        });
+    }
+
+    public void flagTile(int mouseXCoordinate, int mouseYCoordinate)
+    {
+        System.out.println(mouseXCoordinate + ", " + mouseYCoordinate);
+
+        // 0-based tile coordinates in the board
+        int tileX = 5;
+        int tileY = 5;
+
+        Tile tile = board.getTile(tileX, tileY);
+        tile.toggleFlag();
+        repaint();
     }
 
     @Override
@@ -38,7 +59,7 @@ public class BoardComponent extends JComponent
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        TileDrawer tileDrawer = new TileDrawer();
+
         g.setColor(Color.GRAY);
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -49,7 +70,6 @@ public class BoardComponent extends JComponent
         {
             for (int x = 0; x < board.getXTiles(); x++)
             {
-
                 Graphics tileGraphics = g.create(x * tileSizePX + 25, y * tileSizePX + 25, tileSizePX, tileSizePX);
                 tileDrawer.handleDrawing(tileGraphics, tileSizePX, tileSizePX, board.getTile(x, y));
             }
@@ -59,14 +79,8 @@ public class BoardComponent extends JComponent
         g.drawRect(25, 25, widthPX, heightPX);
     }
 
-    public interface GraphicsCellHandler
+    public static class TileDrawer
     {
-        public void handleDrawing(Graphics g, int widthPX, int heightPX, Tile tile);
-    }
-
-    public static class TileDrawer implements GraphicsCellHandler
-    {
-        @Override
         public void handleDrawing(Graphics g, int widthPX, int heightPX, Tile tile)
         {
             g.drawRect(0 , 0, widthPX , heightPX);

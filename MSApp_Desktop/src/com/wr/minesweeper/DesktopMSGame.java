@@ -2,19 +2,19 @@ package com.wr.minesweeper;
 
 public class DesktopMSGame
 {
-
     private Board board;
+    private BoardComponent boardComponent;
 
-    public DesktopMSGame(Board board)
+
+    public DesktopMSGame(Difficulty difficulty)
     {
-        this.board = board;
+        this.board = new Board(difficulty);
+        this.boardComponent = new BoardComponent(board, 20);
     }
 
-    public void startGameDesktop()
+    public BoardComponent getBoardComponent()
     {
-        while(true)
-        {
-            DesktopUtil.drawBoard(board);
-        }
+        return boardComponent;
     }
+
 }
