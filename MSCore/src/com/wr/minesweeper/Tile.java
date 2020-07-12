@@ -18,6 +18,21 @@ public class Tile
         this.hasMine = hasMine;
     }
 
+    public boolean toggleFlag()
+    {
+        if(tileState == State.FLAGGED)
+        {
+            tileState = State.CLOSED;
+            return true;
+        }
+        else if(tileState == State.CLOSED)
+        {
+            tileState = State.FLAGGED;
+            return true;
+        }
+        return false;
+    }
+
     public Board getBoard()
     {
         return board;

@@ -69,6 +69,17 @@ public class Board
         return tiles[x][y];
     }
 
+    public boolean flagTile(int x, int y)
+    {
+        Tile selectedTile = getTile(x,y);
+        return selectedTile.toggleFlag();
+    }
+
+    public boolean openTile(int x, int y)
+    {
+        Tile selectedTile = getTile(x,y);
+        return false;
+    }
 
     public String getName()
     {
