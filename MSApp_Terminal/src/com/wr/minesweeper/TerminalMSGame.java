@@ -62,7 +62,7 @@ public class TerminalMSGame
 
                 System.out.println("(" + xCoordinateInt + ", " + yCoordinateInt + ")");
 
-                boolean flaggingResult = board.flagTile(xCoordinateInt - 1,yCoordinateInt - 1);
+                boolean flaggingResult = board.performTileOperation(Board.TileOperation.FLAG_TOGGLE, xCoordinateInt - 1,yCoordinateInt - 1);
                 if (!flaggingResult)
                 {
                     System.out.println("Invalid Tile");

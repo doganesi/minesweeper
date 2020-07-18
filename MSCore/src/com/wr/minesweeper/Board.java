@@ -4,7 +4,8 @@ import com.wr.util.RandUtil;
 
 public class Board
 {
-    public enum GameState {RUNNING, OVER}
+    public enum GameState {RUNNING, OVER, DEBUG}
+    public enum TileOperation {FLAG_TOGGLE, OPEN}
 
     private int xTiles;
     private int yTiles;
@@ -12,8 +13,6 @@ public class Board
     private String name;
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
-
-//    todo add color attribute
 
     public Board(Difficulty difficulty)
     {
@@ -61,6 +60,7 @@ public class Board
 //            System.out.println("Loop");
 
         }
+        calcNumMinesAround();
         System.out.println("Expected: " + numMines + " Placed: " + counter);
     }
 
@@ -69,10 +69,16 @@ public class Board
         return tiles[x][y];
     }
 
-    public boolean flagTile(int x, int y)
+    public boolean performTileOperation(TileOperation tileOperation, int x, int y)
     {
         Tile selectedTile = getTile(x,y);
-        return selectedTile.toggleFlag();
+        if (tileOperation == TileOperation.FLAG_TOGGLE)
+        {
+            return selectedTile.toggleFlag();
+        }
+
+
+        return false;
     }
 
     public boolean openTile(int x, int y)
@@ -124,6 +130,48 @@ public class Board
         else
         {
             return Difficulty.IMPOSSIBLE;
+        }
+    }
+
+    public void calcNumMinesAround()
+    {
+        for (int x = 0; x < xTiles; x++)
+        {
+            for (int y = 0; y < yTiles; y++)
+            {
+                Tile cTile = tiles[x][y];
+                int numMinesAround = 0;
+
+                numMinesAround += checkNeighbor(x - 1, y -1);
+                numMinesAround += checkNeighbor(x, y -1);
+                numMinesAround += checkNeighbor(x + 1, y - 1);
+                numMinesAround += checkNeighbor(x + 1, y);
+                numMinesAround += checkNeighbor(x - 1 , y);
+                numMinesAround += checkNeighbor(x - 1, y + 1);
+                numMinesAround += checkNeighbor(x, y + 1);
+                numMinesAround += checkNeighbor(x + 1, y + 1);
+
+                cTile.setNumMinesAround(numMinesAround);
+
+            }
+        }
+    }
+
+    public int checkNeighbor(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= getXTiles() || y >= getYTiles())
+        {
+            return 0;
+        }
+
+        Tile neighborTile = tiles[x][y];
+        if (neighborTile.isHasMine())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
         }
     }
 

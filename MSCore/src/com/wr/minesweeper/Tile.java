@@ -1,11 +1,15 @@
 package com.wr.minesweeper;
 
+import java.awt.*;
+
 public class Tile
 {
-    public enum State{FLAGGED, OPEN, CLOSED}
+    public enum State {FLAGGED, OPEN, CLOSED}
+    public static final Color[] COLORS = new Color[] {Color.WHITE, Color.BLUE, Color.GREEN, Color.RED, Color.MAGENTA, new Color(128, 6, 6), Color.CYAN, Color.BLACK, Color.GRAY};
 
     private int tileLocationX;
     private int tileLocationY;
+    private int numMinesAround;
     private boolean hasMine;
     private State tileState = State.CLOSED;
     private Board board;
@@ -18,7 +22,12 @@ public class Tile
         this.hasMine = hasMine;
     }
 
-    public boolean toggleFlag()
+    private boolean open()
+    {
+        return false;
+    }
+
+    boolean toggleFlag()
     {
         if(tileState == State.FLAGGED)
         {
@@ -81,5 +90,30 @@ public class Tile
     public void setTileState(State tileState)
     {
         this.tileState = tileState;
+    }
+
+    public int getNumMinesAround()
+    {
+        return numMinesAround;
+    }
+
+    public char getNumMinesAroundChar()
+    {
+        if (numMinesAround == 0)
+        {
+            return ' ';
+        }
+        String numberMinesAroundStr = String.valueOf(getNumMinesAround());
+        return numberMinesAroundStr.charAt(0);
+    }
+
+    public Color getNumMinesAroundColor()
+    {
+        return COLORS[numMinesAround];
+    }
+
+    public void setNumMinesAround(int numMinesAround)
+    {
+        this.numMinesAround = numMinesAround;
     }
 }

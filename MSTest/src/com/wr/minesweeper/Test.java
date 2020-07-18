@@ -6,16 +6,17 @@ public class Test
 {
     public static void main(String[] args)
     {
-        test_3();
+//        System.out.println("\033[38;2;255;82;197;48;2;155;106;0mHello\n");
+        test_2();
     }
 
     private static void test_3()
     {
-//        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
-//        mainApp_Terminal.start();
+        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
+        mainApp_Terminal.start();
 
-        MSMainApp_Desktop mainApp_Desktop = new MSMainApp_Desktop();
-        mainApp_Desktop.start();
+//        MSMainApp_Desktop mainApp_Desktop = new MSMainApp_Desktop();
+//        mainApp_Desktop.start();
 
     }
 
@@ -34,8 +35,8 @@ public class Test
             Difficulty difficulty = Difficulty.DIFFICULTY_LEVELS[randomIndex];
             System.out.println(difficulty.getName() + " : " + randomIndex);
             Board board1 = new Board(difficulty);
-            board1.setGameState(Board.GameState.OVER);
-//            TerminalUtil.printBoard(board1);
+            board1.setGameState(Board.GameState.DEBUG);
+            TerminalMSUtil.printBoard(board1);
 //            DesktopUtil.drawBoard(board1);
 //            System.out.println(' ');
             boardArray[i] = board1;
