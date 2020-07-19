@@ -14,11 +14,12 @@ public class TerminalMSGame
     public void startGame()
     {
         Scanner scanner = new Scanner(System.in);
-        while(true)
+        while(board.getGameState() == Board.GameState.RUNNING)
         {
             TerminalMSUtil.printBoard(board);
             System.out.println("To open a tile enter tile coordinates in the form: x,y");
             System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
+            System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
             System.out.println("type back to return to menu");
             System.out.print("Enter command: ");
             String userInput = scanner.next();
@@ -31,46 +32,61 @@ public class TerminalMSGame
             else if (userInput.startsWith("f"))
             {
                 String coordinatesString = userInput.substring(1);
-                System.out.println("coordinatesString: " + coordinatesString);
-                String[] coordinatesTokens = coordinatesString.split(",");
-                if (coordinatesTokens.length != 2)
-                {
-                    System.out.println("Invalid input");
-                    continue;
-                }
-
-                String xCoordinateString = coordinatesTokens[0];
-                String yCoordinateString = coordinatesTokens[1];
-
-                int xCoordinateInt = 0;
-                int yCoordinateInt = 0;
-                try
-                {
-                    xCoordinateInt = Integer.parseInt(xCoordinateString);
-                    yCoordinateInt = Integer.parseInt(yCoordinateString);
-                }
-                catch (NumberFormatException e)
-                {
-                }
-
-                if (xCoordinateInt == 0 || xCoordinateInt > board.getXTiles() ||
-                    yCoordinateInt == 0 || yCoordinateInt > board.getYTiles())
-                {
-                    System.out.println("Invalid Input");
-                    continue;
-                }
-
-                System.out.println("(" + xCoordinateInt + ", " + yCoordinateInt + ")");
-
-                boolean flaggingResult = board.performTileOperation(Board.TileOperation.FLAG_TOGGLE, xCoordinateInt - 1,yCoordinateInt - 1);
-                if (!flaggingResult)
-                {
-                    System.out.println("Invalid Tile");
-                }
-
+                performTileOperation(Board.TileOperation.FLAG_TOGGLE, coordinatesString);
+            }
+            else if(userInput.startsWith("o"))
+            {
+                String coordinatesString = userInput.substring(1);
+                performTileOperation(Board.TileOperation.OPEN, coordinatesString);
             }
         }
 
+        TerminalMSUtil.printBoard(board);
+        if (board.getGameState() == Board.GameState.OVER_WIN)
+        {
+            System.out.println("Congratulations");
+        }
+        else
+        {
+            System.out.println("Game lost ;(");
+        }
+
+    }
+
+    public void performTileOperation(Board.TileOperation tileOperation, String coordinatesString)
+    {
+        System.out.println("coordinatesString: " + coordinatesString);
+        String[] coordinatesTokens = coordinatesString.split(",");
+        if (coordinatesTokens.length != 2)
+        {
+            System.out.println("Invalid input");
+            return;
+        }
+
+        String xCoordinateString = coordinatesTokens[0];
+        String yCoordinateString = coordinatesTokens[1];
+
+        int xCoordinateInt = 0;
+        int yCoordinateInt = 0;
+        try
+        {
+            xCoordinateInt = Integer.parseInt(xCoordinateString);
+            yCoordinateInt = Integer.parseInt(yCoordinateString);
+        }
+        catch (NumberFormatException e)
+        {
+        }
+
+        if (xCoordinateInt == 0 || xCoordinateInt > board.getXTiles() ||
+                yCoordinateInt == 0 || yCoordinateInt > board.getYTiles())
+        {
+            System.out.println("Invalid Input");
+            return;
+        }
+
+        System.out.println("(" + xCoordinateInt + ", " + yCoordinateInt + ")");
+
+        board.performTileOperation(tileOperation, xCoordinateInt - 1,yCoordinateInt - 1);
     }
 
 }

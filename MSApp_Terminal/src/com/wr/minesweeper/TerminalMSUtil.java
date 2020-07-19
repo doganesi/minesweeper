@@ -13,6 +13,7 @@ public class TerminalMSUtil
     {
         char[][] baseBoard = new char[board.getXTiles()][board.getYTiles()];
         Color[][] baseBoardColors = new Color[board.getXTiles()][board.getYTiles()];
+        Color[][] baseBoardBGColors = new Color[board.getXTiles()][board.getYTiles()];
 
         iterate2DCharArray(baseBoard, new CharArrayCellHandler()
         {
@@ -22,11 +23,16 @@ public class TerminalMSUtil
                 Tile currentTile = board.getTile(x, y);
 
 
-                if (currentTile.getBoard().getGameState() == Board.GameState.DEBUG)
+                if (currentTile.getBoard().getGameState() == Board.GameState.RUNNING)
                 {
-                    if (currentTile.isHasMine())
+                    if (currentTile.getTileState() == Tile.State.CLOSED)
                     {
-                        return '*';
+                        return '\u25A1';
+                    }
+                    else if (currentTile.getTileState() == Tile.State.FLAGGED)
+                    {
+                        baseBoardColors[x][y] = Color.PINK;
+                        return 'F';
                     }
                     else
                     {
@@ -35,24 +41,43 @@ public class TerminalMSUtil
                     }
 
                 }
-                else
+                else if (currentTile.getBoard().getGameState() == Board.GameState.OVER_LOSE)
                 {
-                    if (currentTile.getBoard().getGameState() == Board.GameState.OVER && currentTile.isHasMine())
+                    if (currentTile.isHasMine())
                     {
+                        baseBoardBGColors[x][y] = Color.RED;
+                        baseBoardColors[x][y] = Color.WHITE;
                         return '*';
                     }
-                    else if (currentTile.getTileState() == Tile.State.FLAGGED)
+                    else if(currentTile.getTileState() == Tile.State.OPEN)
                     {
-                        return 'F';
+                        baseBoardColors[x][y] = currentTile.getNumMinesAroundColor();
+                        return currentTile.getNumMinesAroundChar();
                     }
                     else
                     {
                         return '\u25A1';
                     }
                 }
-
-
-
+                else if (currentTile.getBoard().getGameState() == Board.GameState.OVER_WIN)
+                {
+                    if (currentTile.isHasMine())
+                    {
+                        baseBoardBGColors[x][y] = Color.GREEN;
+                        baseBoardColors[x][y] = Color.WHITE;
+                        return '*';
+                    }
+                    else if(currentTile.getTileState() == Tile.State.OPEN)
+                    {
+                        baseBoardColors[x][y] = currentTile.getNumMinesAroundColor();
+                        return currentTile.getNumMinesAroundChar();
+                    }
+                    else
+                    {
+                        return '\u25A1';
+                    }
+                }
+                return ' ';
             }
         });
         char[][] borderBoard = wrapBoard(baseBoard, new BorderCellHandler(BorderType.SINGLE));
@@ -72,21 +97,19 @@ public class TerminalMSUtil
             public char handle(char currentValue, int x, int y, int maxX, int maxY)
             {
                 Color c = null;
+                Color bgColor = null;
                 if (x < startColorX || x >= endColorX || y < startColorY || y >= endColorY)
                 {
                     c = Color.WHITE;
+                    bgColor = Color.GRAY;
                 }
                 else
                 {
                     c = baseBoardColors[x - colorArrayOffset][y - colorArrayOffset];
-                }
-                if (c == null)
-                {
-                    c = Color.WHITE;
+                    bgColor = baseBoardBGColors[x - colorArrayOffset][y - colorArrayOffset];
                 }
 
-
-                TerminalArrayUtil.colorSystemOut(String.valueOf(currentValue), c, false, false);
+                TerminalArrayUtil.colorSystemOut(String.valueOf(currentValue), c, bgColor);
                 if (x == maxX)
                 {
                     System.out.print('\n');

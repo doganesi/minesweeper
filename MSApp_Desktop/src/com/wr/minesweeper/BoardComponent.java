@@ -30,7 +30,7 @@ public class BoardComponent extends JComponent
                 {
                     performTileOperation(Board.TileOperation.FLAG_TOGGLE, e.getX(), e.getY());
                 }
-                else if (e.getButton() == MouseEvent.BUTTON2)
+                else if (e.getButton() == MouseEvent.BUTTON3)
                 {
                     performTileOperation(Board.TileOperation.OPEN, e.getX(), e.getY());
                 }
@@ -114,36 +114,47 @@ public class BoardComponent extends JComponent
             g.drawRect(0 , 0, widthPX , heightPX);
             int tileIndent = widthPX / 10;
 
-            if (tile.getBoard().getGameState() == Board.GameState.DEBUG)
-            {
-                if (tile.isHasMine())
-                {
-                    g.setColor(Color.BLACK);
-                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-                }
-                else
-                {
-                    g.setColor(tile.getNumMinesAroundColor());
-                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, 15, 15);
-                }
-
-            }
-            else
-            {
-                if (tile.getBoard().getGameState() == Board.GameState.OVER && tile.isHasMine())
-                {
-                    g.setColor(Color.BLACK);
-                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-                }
-                if (tile.getTileState() == Tile.State.FLAGGED)
-                {
-                    g.setColor(Color.RED);
-                    g.drawRoundRect(tileIndent, tileIndent, widthPX - tileIndent * 2 , heightPX - tileIndent * 2, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-                }
-
-            }
+//            if (tile.getBoard().getGameState() == Board.GameState.DEBUG)
+//            {
+//                if (tile.isHasMine())
+//                {
+//                    g.setColor(Color.BLACK);
+//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                }
+//                else
+//                {
+//                    g.setColor(tile.getNumMinesAroundColor());
+//                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, 15, 15);
+//                }
+//
+//            }
+//            else
+//            {
+//                if (tile.getBoard().getGameState() == Board.GameState.OVER && tile.isHasMine())
+//                {
+//                    g.setColor(Color.BLACK);
+//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                }
+//                if (tile.getTileState() == Tile.State.FLAGGED)
+//                {
+//                    g.setColor(Color.RED);
+//                    g.drawRoundRect(tileIndent, tileIndent, widthPX - tileIndent * 2 , heightPX - tileIndent * 2, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                }
+//                else if (tile.isHasMine())
+//                {
+//                    g.setColor(Color.BLACK);
+//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+//                }
+//                else
+//                {
+//                    g.setColor(tile.getNumMinesAroundColor());
+//                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, 15, 15);
+//                }
+//
+//            }
         }
     }
 }

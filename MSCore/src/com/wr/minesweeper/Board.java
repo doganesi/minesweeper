@@ -4,7 +4,7 @@ import com.wr.util.RandUtil;
 
 public class Board
 {
-    public enum GameState {RUNNING, OVER, DEBUG}
+    public enum GameState {RUNNING, OVER_WIN, OVER_LOSE}
     public enum TileOperation {FLAG_TOGGLE, OPEN}
 
     private int xTiles;
@@ -69,22 +69,78 @@ public class Board
         return tiles[x][y];
     }
 
-    public boolean performTileOperation(TileOperation tileOperation, int x, int y)
+    private void calcWin()
+    {
+        for (int x = 0; x < xTiles; x++)
+        {
+            for (int y = 0; y < yTiles; y++)
+            {
+                Tile cTile = tiles[x][y];
+                if (cTile.getTileState() == Tile.State.CLOSED)
+                {
+                    return;
+                }
+                else if (cTile.getTileState() == Tile.State.FLAGGED && !cTile.isHasMine())
+                {
+                    return;
+                }
+
+            }
+        }
+        setGameState(GameState.OVER_WIN);
+    }
+
+
+    public void performTileOperation(TileOperation tileOperation, int x, int y)
     {
         Tile selectedTile = getTile(x,y);
         if (tileOperation == TileOperation.FLAG_TOGGLE)
         {
-            return selectedTile.toggleFlag();
+            selectedTile.toggleFlag();
         }
+        else if (tileOperation == TileOperation.OPEN)
+        {
+            if (selectedTile.getTileState() == Tile.State.FLAGGED)
+            {
+                return;
+            }
 
-
-        return false;
+            if (selectedTile.isHasMine())
+            {
+                selectedTile.setTileState(Tile.State.OPEN);
+                setGameState(GameState.OVER_LOSE);
+                return;
+            }
+            openTile(x, y);
+        }
+        calcWin();
     }
 
-    public boolean openTile(int x, int y)
+    private void openTile(int x, int y)
     {
+        if (x < 0 || y < 0 || x >= getXTiles() || y >= getYTiles())
+        {
+            return;
+        }
+
         Tile selectedTile = getTile(x,y);
-        return false;
+        if (selectedTile.getTileState() == Tile.State.OPEN || selectedTile.getTileState() == Tile.State.FLAGGED)
+        {
+            return;
+        }
+
+        selectedTile.setTileState(Tile.State.OPEN);
+        if (selectedTile.getNumMinesAround() == 0)
+        {
+            openTile(x - 1, y -1);
+            openTile(x, y -1);
+            openTile(x + 1, y - 1);
+            openTile(x + 1, y);
+            openTile(x - 1 , y);
+            openTile(x - 1, y + 1);
+            openTile(x, y + 1);
+            openTile(x + 1, y + 1);
+        }
     }
 
     public String getName()
