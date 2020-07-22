@@ -26,11 +26,11 @@ public class BoardComponent extends JComponent
             @Override
             public void mousePressed(MouseEvent e)
             {
-                if (e.getButton() == MouseEvent.BUTTON1)
+                if (e.getButton() == MouseEvent.BUTTON3)
                 {
                     performTileOperation(Board.TileOperation.FLAG_TOGGLE, e.getX(), e.getY());
                 }
-                else if (e.getButton() == MouseEvent.BUTTON3)
+                else if (e.getButton() == MouseEvent.BUTTON1)
                 {
                     performTileOperation(Board.TileOperation.OPEN, e.getX(), e.getY());
                 }
@@ -113,7 +113,69 @@ public class BoardComponent extends JComponent
         {
             g.drawRect(0 , 0, widthPX , heightPX);
             int tileIndent = widthPX / 10;
+            int charSizeW = g.getFontMetrics().charWidth(tile.getNumMinesAroundChar());
+            int charSizeH = g.getFontMetrics().getHeight();
+            int charX = (widthPX-charSizeW)/2;
+            int charY = (int) ((heightPX-charSizeH)/2 + heightPX/1.5);
 
+
+            if (tile.getBoard().getGameState() == Board.GameState.RUNNING)
+            {
+                if (tile.getTileState() == Tile.State.CLOSED)
+                {
+                    g.setColor(new Color(40, 100, 100));
+                    g.drawRect(5,5, widthPX/2, heightPX/2);
+                    g.fillRect(5,5, widthPX/2, heightPX/2);
+                }
+                else if (tile.getTileState() == Tile.State.FLAGGED)
+                {
+                    g.setColor(Color.RED);
+                    g.drawRoundRect(tileIndent, tileIndent, widthPX - tileIndent * 2 , heightPX - tileIndent * 2, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+                }
+                else
+                {
+                    g.setColor(tile.getNumMinesAroundColor());
+                    Font currentFont = g.getFont();
+                    Font newFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+                    g.setFont(newFont);
+                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, charX, charY);
+                }
+            }
+            else if (tile.getBoard().getGameState() == Board.GameState.OVER_LOSE)
+            {
+                if (tile.isHasMine())
+                {
+                    g.setColor(new Color (100, 10, 2));
+                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+                }
+                else if(tile.getTileState() == Tile.State.OPEN)
+                {
+                    g.setColor(tile.getNumMinesAroundColor());
+                    Font currentFont = g.getFont();
+                    Font newFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+                    g.setFont(newFont);
+                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, charX, charY);
+                }
+
+            }
+            else if(tile.getBoard().getGameState() == Board.GameState.OVER_WIN)
+            {
+                if (tile.isHasMine())
+                {
+                    g.setColor( new Color(34,139,34));
+                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
+                }
+                else if(tile.getTileState() == Tile.State.OPEN)
+                {
+                    g.setColor(tile.getNumMinesAroundColor());
+                    Font currentFont = g.getFont();
+                    Font newFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+                    g.setFont(newFont);
+                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, charX, charY);
+                }
+            }
 //            if (tile.getBoard().getGameState() == Board.GameState.DEBUG)
 //            {
 //                if (tile.isHasMine())

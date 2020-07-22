@@ -14,11 +14,17 @@ public class Board
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
 
+    public interface TileHandler
+    {
+        Tile handle(Tile currentTile, int x, int y, int maxX, int maxY);
+
+    }
+
     public Board(Difficulty difficulty)
     {
-        this.xTiles = difficulty.getMinWidth() + RandUtil.nextInt(difficulty.getMaxWidth()-difficulty.getMinWidth());
-        this.yTiles = difficulty.getMinHeight() + RandUtil.nextInt(difficulty.getMaxHeight()-difficulty.getMinHeight());
-        this.numMines = (int) (difficulty.getBombRatio()*getXTiles()*getYTiles());
+        xTiles = difficulty.getMinWidth() + RandUtil.nextInt(difficulty.getMaxWidth()-difficulty.getMinWidth());
+        yTiles = difficulty.getMinHeight() + RandUtil.nextInt(difficulty.getMaxHeight()-difficulty.getMinHeight());
+        numMines = (int) (difficulty.getBombRatio()*getXTiles()*getYTiles());
         initBoard();
     }
 
@@ -30,9 +36,22 @@ public class Board
         initBoard();
     }
 
+    private static void iterateTiles(Tile[][] arr, TileHandler handleTile)
+    {
+        int maxX = arr.length;
+        int maxY = arr[0].length;
+        for (int x = 0; x < maxX; x++)
+        {
+            for (int y = 0; y < maxY; y++)
+            {
+                arr[x][y] = handleTile.handle(arr[x][y], x, y, maxX - 1, maxY - 1);
+            }
+        }
+    }
+
     private void initBoard()
     {
-        this.tiles = new Tile[xTiles][yTiles];
+        tiles = new Tile[xTiles][yTiles];
         int counter = 0;
 
         while(counter < numMines)

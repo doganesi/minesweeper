@@ -3,10 +3,10 @@ package com.wr.minesweeper;
 public class Difficulty
 {
     public static final Difficulty EASY = new Difficulty("Easy",0.1, 8, 10, 8, 10);
-    public static final Difficulty MEDIUM = new Difficulty("Medium",0.15, 10, 17, 10, 18);
-    public static final Difficulty HARD = new Difficulty("Hard", 0.20, 17, 20, 18, 20);
-    public static final Difficulty EXTREME = new Difficulty("Extreme",0.25, 20, 23, 20, 25);
-    public static final Difficulty IMPOSSIBLE = new Difficulty("Impossible",1, 23, 99, 25, 99);
+    public static final Difficulty MEDIUM = new Difficulty("Medium",0.1, 10, 17, 10, 18);
+    public static final Difficulty HARD = new Difficulty("Hard", 0.1, 17, 20, 18, 20);
+    public static final Difficulty EXTREME = new Difficulty("Extreme",0.1, 20, 23, 20, 25);
+    public static final Difficulty IMPOSSIBLE = new Difficulty("Impossible",0.3, 23, 99, 25, 99);
 
     public static final Difficulty[] DIFFICULTY_LEVELS = new Difficulty[] {EASY, MEDIUM, HARD, EXTREME, IMPOSSIBLE};
                                                          //                  0      1     2      3           4

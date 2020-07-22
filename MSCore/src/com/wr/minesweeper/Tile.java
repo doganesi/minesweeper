@@ -5,7 +5,7 @@ import java.awt.*;
 public class Tile
 {
     public enum State {FLAGGED, OPEN, CLOSED}
-    public static final Color[] COLORS = new Color[] {Color.WHITE, Color.BLUE, Color.GREEN, Color.RED, Color.MAGENTA, new Color(128, 6, 6), Color.CYAN, Color.BLACK, Color.GRAY};
+    public static final Color[] COLORS = new Color[] {Color.WHITE, Color.BLUE, new Color(24, 100, 40), Color.RED, Color.MAGENTA, new Color(128, 6, 6), Color.CYAN, Color.BLACK, Color.GRAY};
 
     private int tileLocationX;
     private int tileLocationY;
