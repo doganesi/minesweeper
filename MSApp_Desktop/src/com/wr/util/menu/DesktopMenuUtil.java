@@ -32,7 +32,8 @@ public class DesktopMenuUtil
                 ApplicationMenu subMenu = subMenuItem.getApplicationMenu();
                 JMenu subJMenu = getJMenu(parentComponent, subMenuItem.getName(), subMenu);
                 jMenu.add(subJMenu);
-            } else if (menuItem instanceof ApplicationMenuCommandItem)
+            }
+            else if (menuItem instanceof ApplicationMenuCommandItem)
             {
                 ApplicationMenuCommandItem commandItem = (ApplicationMenuCommandItem) menuItem;
                 IMenuItemCommand command = commandItem.getCommand();

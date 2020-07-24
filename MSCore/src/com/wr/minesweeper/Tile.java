@@ -22,11 +22,6 @@ public class Tile
         this.hasMine = hasMine;
     }
 
-    private boolean open()
-    {
-        return false;
-    }
-
     boolean toggleFlag()
     {
         if(tileState == State.FLAGGED)

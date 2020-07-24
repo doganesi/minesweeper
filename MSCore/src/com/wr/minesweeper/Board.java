@@ -14,12 +14,6 @@ public class Board
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
 
-    public interface TileHandler
-    {
-        Tile handle(Tile currentTile, int x, int y, int maxX, int maxY);
-
-    }
-
     public Board(Difficulty difficulty)
     {
         xTiles = difficulty.getMinWidth() + RandUtil.nextInt(difficulty.getMaxWidth()-difficulty.getMinWidth());
@@ -34,19 +28,6 @@ public class Board
         this.yTiles = yTiles;
         this.numMines = numMines;
         initBoard();
-    }
-
-    private static void iterateTiles(Tile[][] arr, TileHandler handleTile)
-    {
-        int maxX = arr.length;
-        int maxY = arr[0].length;
-        for (int x = 0; x < maxX; x++)
-        {
-            for (int y = 0; y < maxY; y++)
-            {
-                arr[x][y] = handleTile.handle(arr[x][y], x, y, maxX - 1, maxY - 1);
-            }
-        }
     }
 
     private void initBoard()
@@ -170,42 +151,6 @@ public class Board
     public void setName(String name)
     {
         this.name = name;
-    }
-
-
-
-    public Difficulty getDifficulty()
-    {
-
-        double percentMines = numMines * 100.0 / getNumTiles();
-        for (int i = 0; i < Difficulty.DIFFICULTY_LEVELS.length; i++)
-        {
-            Difficulty dif = Difficulty.DIFFICULTY_LEVELS[i];
-            if (percentMines < dif.getBombRatio())
-            {
-                return dif;
-            }
-        }
-        if (percentMines < 10)
-        {
-            return Difficulty.EASY;
-        }
-        else if (percentMines < 15)
-        {
-            return Difficulty.MEDIUM;
-        }
-        else if (percentMines < 20)
-        {
-            return Difficulty.HARD;
-        }
-        else if (percentMines < 25)
-        {
-            return Difficulty.EXTREME;
-        }
-        else
-        {
-            return Difficulty.IMPOSSIBLE;
-        }
     }
 
     public void calcNumMinesAround()
