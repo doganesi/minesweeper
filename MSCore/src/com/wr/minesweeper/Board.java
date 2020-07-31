@@ -1,6 +1,14 @@
 package com.wr.minesweeper;
 
+import com.wr.util.IBoardActionListener;
 import com.wr.util.RandUtil;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board
 {
@@ -13,6 +21,8 @@ public class Board
     private String name;
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
+    private List<IBoardActionListener> actionListeners = new ArrayList<>();
+
 
     public Board(Difficulty difficulty)
     {
@@ -28,6 +38,19 @@ public class Board
         this.yTiles = yTiles;
         this.numMines = numMines;
         initBoard();
+    }
+
+    public void addActionListener(IBoardActionListener listener)
+    {
+        actionListeners.add(listener);
+    }
+
+    private void alertListeners(TileOperation tileOperation, int x, int y)
+    {
+        for (IBoardActionListener actionListener : actionListeners)
+        {
+            actionListener.refresh(tileOperation, x, y);
+        }
     }
 
     private void initBoard()
@@ -114,6 +137,7 @@ public class Board
             openTile(x, y);
         }
         calcWin();
+        alertListeners(tileOperation, x, y);
     }
 
     private void openTile(int x, int y)

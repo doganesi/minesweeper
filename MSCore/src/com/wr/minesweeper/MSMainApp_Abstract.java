@@ -42,5 +42,11 @@ public abstract class MSMainApp_Abstract
 
     public abstract void start();
 
-    public abstract void loadLevel(Difficulty difficulty);
+    public void loadLevel(Difficulty difficulty)
+    {
+        Board board = new Board(difficulty);
+        loadBoard(board);
+    }
+
+    public abstract void loadBoard(Board board);
 }

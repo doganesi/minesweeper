@@ -6,9 +6,9 @@ public class DesktopMSGame
     private BoardComponent boardComponent;
 
 
-    public DesktopMSGame(Difficulty difficulty)
+    public DesktopMSGame(Board board)
     {
-        this.board = new Board(difficulty);
+        this.board = board;
         this.boardComponent = new BoardComponent(board, 20);
     }
 

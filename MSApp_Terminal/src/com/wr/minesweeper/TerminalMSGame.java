@@ -1,28 +1,46 @@
 package com.wr.minesweeper;
 
+import com.wr.util.IBoardActionListener;
+import com.wr.util.scanner.NonBlockingScanner;
+import jdk.dynalink.NamedOperation;
+
 import java.util.Scanner;
 
-public class TerminalMSGame
+public class TerminalMSGame implements IBoardActionListener
 {
     private Board board;
+    private boolean externalRefresh = false;
 
-    public TerminalMSGame(Difficulty difficulty)
+    public TerminalMSGame(Board board)
     {
-        this.board = new Board(difficulty);
+        this.board = board;
+        board.addActionListener(this);
     }
 
     public void startGame()
     {
-        Scanner scanner = new Scanner(System.in);
+        NonBlockingScanner scanner = new NonBlockingScanner();
+        boolean hasUserInput = true;
         while(board.getGameState() == Board.GameState.RUNNING)
         {
-            TerminalMSUtil.printBoard(board);
-            System.out.println("To open a tile enter tile coordinates in the form: x,y");
-            System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
-            System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
-            System.out.println("type back to return to menu");
-            System.out.print("Enter command: ");
-            String userInput = scanner.next();
+            if (hasUserInput || externalRefresh)
+            {
+                TerminalMSUtil.printBoard(board);
+                System.out.println("To open a tile enter tile coordinates in the form: x,y");
+                System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
+                System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
+                System.out.println("type back to return to menu");
+                System.out.print("Enter command: ");
+                externalRefresh = false;
+            }
+            String userInput = scanner.getUserInput();
+            if (userInput == null)
+            {
+                hasUserInput = false;
+                continue;
+            }
+
+            hasUserInput = true;
 
             // process command
             if (userInput.equalsIgnoreCase("back"))
@@ -41,6 +59,7 @@ public class TerminalMSGame
             }
         }
 
+        System.out.println("\n");
         TerminalMSUtil.printBoard(board);
         if (board.getGameState() == Board.GameState.OVER_WIN)
         {
@@ -73,7 +92,7 @@ public class TerminalMSGame
             xCoordinateInt = Integer.parseInt(xCoordinateString);
             yCoordinateInt = Integer.parseInt(yCoordinateString);
         }
-        catch (NumberFormatException e)
+        catch (NumberFormatException ignored)
         {
         }
 
@@ -89,4 +108,10 @@ public class TerminalMSGame
         board.performTileOperation(tileOperation, xCoordinateInt - 1,yCoordinateInt - 1);
     }
 
+    @Override
+    public void refresh(Board.TileOperation tileOperation, int x, int y)
+    {
+        externalRefresh = true;
+        System.out.println("\n");
+    }
 }

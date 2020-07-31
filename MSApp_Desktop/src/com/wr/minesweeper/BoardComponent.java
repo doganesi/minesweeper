@@ -1,11 +1,13 @@
 package com.wr.minesweeper;
 
+import com.wr.util.IBoardActionListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class BoardComponent extends JComponent
+public class BoardComponent extends JComponent implements IBoardActionListener
 {
     private static final int BOARD_INDENT = 30;
     private int tileSizePX;
@@ -21,6 +23,7 @@ public class BoardComponent extends JComponent
         this.tileSizePX = tileSizePX;
         widthPX = board.getXTiles() * tileSizePX;
         heightPX = board.getYTiles() * tileSizePX;
+        board.addActionListener(this);
         addMouseListener(new MouseAdapter()
         {
             @Override
@@ -105,6 +108,13 @@ public class BoardComponent extends JComponent
 
         g.setColor(Color.BLACK);
         g.drawRect(BOARD_INDENT, BOARD_INDENT, widthPX, heightPX);
+    }
+
+    @Override
+    public void refresh(Board.TileOperation tileOperation, int x, int y)
+    {
+        invalidate();
+        repaint();
     }
 
     public static class TileDrawer

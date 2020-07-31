@@ -27,12 +27,11 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
     }
 
     @Override
-    public void loadLevel(Difficulty difficulty)
+    public void loadBoard(Board board)
     {
-        DesktopMSGame newGame = new DesktopMSGame(difficulty);
+        DesktopMSGame newGame = new DesktopMSGame(board);
         mainFrame.getContentPane().removeAll();
         mainFrame.getContentPane().add(newGame.getBoardComponent());
         mainFrame.pack();
     }
-
 }

@@ -15,9 +15,9 @@ public class MSMainApp_Terminal extends MSMainApp_Abstract
     }
 
     @Override
-    public void loadLevel(Difficulty difficulty)
+    public void loadBoard(Board board)
     {
-        TerminalMSGame newGame = new TerminalMSGame(difficulty);
+        TerminalMSGame newGame = new TerminalMSGame(board);
         newGame.startGame();
     }
 }

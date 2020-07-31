@@ -1,77 +1,91 @@
 package com.wr.minesweeper;
 
+import com.wr.util.IBoardActionListener;
 import com.wr.util.RandUtil;
+import com.wr.util.menu.*;
+
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
 
 public class Test
 {
+    protected static ApplicationMenu testMenu = new ApplicationMenu("Minesweeper Loading Harness");
+
     public static void main(String[] args)
     {
-//        System.out.println("\033[38;2;255;82;197;48;2;155;106;0mHello\n");
-        test_3();
+        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Desktop Application", Test::startDesktopApplication));
+        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Terminal Application", Test::startTerminalApplication));
+        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Synchronized Test", Test::startApplicationSyncTest));
+        TerminalMenuUtil.showMenu(testMenu);
+//        startApplicationSyncTest(null);
     }
 
-    private static void test_3()
+    public static void startDesktopApplication(ApplicationMenuItem menuItem)
     {
-//        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
-//        mainApp_Terminal.start();
+        MSMainApp_Desktop mainApp_Desktop = new MSMainApp_Desktop();
+        mainApp_Desktop.start();
+    }
+
+    public static void startTerminalApplication(ApplicationMenuItem menuItem)
+    {
+        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
+        mainApp_Terminal.start();
+    }
+
+    public static void startApplicationSyncTest(ApplicationMenuItem menuItem)
+    {
+        Board board = new Board(Difficulty.MEDIUM);
+
+//        board.addActionListener(new GameFileWriter());
 
         MSMainApp_Desktop mainApp_Desktop = new MSMainApp_Desktop();
         mainApp_Desktop.start();
+        mainApp_Desktop.loadBoard(board);
 
+        MSMainApp_Terminal mainApp_Terminal = new MSMainApp_Terminal();
+        mainApp_Terminal.loadBoard(board);
     }
 
-    private static void test_2()
+    private static class GameFileWriter implements IBoardActionListener
     {
-        // Generate 20 boards (use loop)
-        // we only want MEDIUM, HARD or EXTREME (randomly)
-        // print difficulty level on one line
-        // follow by printing the board
-        // add empty line
+        private File file = new File("TestFile.txt");
+        private PrintWriter printWriter;
 
-        Board[] boardArray = new Board[6];
-        for (int i = 0; i <= 5; i++)
+        public GameFileWriter()
         {
-            int randomIndex = RandUtil.nextInt(3);
-            Difficulty difficulty = Difficulty.DIFFICULTY_LEVELS[randomIndex];
-            System.out.println(difficulty.getName() + " : " + randomIndex);
-            Board board1 = new Board(difficulty);
-            TerminalMSUtil.printBoard(board1);
-//            DesktopUtil.drawBoard(board1);
-//            System.out.println(' ');
-            boardArray[i] = board1;
+            if(!file.exists())
+            {
+                try
+                {
+                    file.createNewFile();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            try
+            {
+                printWriter = new PrintWriter(file);
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
         }
 
-        DesktopUtil.drawBoards(boardArray);
+        @Override
+        public void refresh(Board.TileOperation tileOperation, int x, int y)
+        {
+            if (printWriter != null)
+            {
+                printWriter.println(tileOperation.toString() + " : " + x + ", " + y);
+                printWriter.flush();
+            }
+        }
     }
-
-    private static void test_1()
-    {
-//        Random rand = new Random(System.currentTimeMillis());
-//        for (int i = 0; i < 100; i++)
-//        {
-//            int numMines = rand.nextInt(50);
-//            Board board = new Board(10, 5, numMines);
-//            System.out.println(board.getNumMines() + " - " + board.getLevel());
-//        }
-
-//        Board board1 = new Board(Difficulty.IMPOSSIBLE);
-//        Board board24 = new Board(20, 20, 4);
-//        board1.setName("FirstBoard");
-//        board1.getTile(2,3).setTileState(Tile.State.FLAGGED);
-//        board1.getTile(2,4).setTileState(Tile.State.FLAGGED);
-//        board1.setGameState(Board.GameState.OVER);
-//        System.out.println(board1.getDifficulty().getName());
-//        DesktopUtil.drawBoard(board1);
-//        TerminalUtil.printBoard(board1);
-//        Board board2 = new Board(10, 5, 12);
-//        board2.setName("SecondBoarda[dflgp[flgsldf][pals;fg;");
-//        Board board3 = new Board(10, 5, 12);
-//        board1.setName("Ff");
-//        Board board4 = new Board(10, 5, 12);
-//        int mineNumber = numMines;
-//            System.out.println("Number of mines is " + mineNumber);
-    }
-
-
 
 }
