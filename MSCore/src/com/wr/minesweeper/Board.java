@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Board
@@ -18,6 +19,8 @@ public class Board
     private int xTiles;
     private int yTiles;
     private int numMines;
+    private int numFlags;
+    private Date startDate;
     private String name;
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
@@ -116,10 +119,20 @@ public class Board
 
     public void performTileOperation(TileOperation tileOperation, int x, int y)
     {
+        if (startDate == null)
+        {
+            startDate = new Date();
+        }
         Tile selectedTile = getTile(x,y);
         if (tileOperation == TileOperation.FLAG_TOGGLE)
         {
+            if (selectedTile.getTileState() == Tile.State.CLOSED && getNumRemainingFlags() == 0)
+            {
+                return;
+            }
             selectedTile.toggleFlag();
+            calcNumFlags();
+
         }
         else if (tileOperation == TileOperation.OPEN)
         {
@@ -255,10 +268,45 @@ public class Board
         this.numMines = numMines;
     }
 
+    public int getNumRemainingFlags()
+    {
+        return numMines - numFlags;
+    }
+
+    public void calcNumFlags()
+    {
+        numFlags = 0;
+        for (int x = 0; x < xTiles; x++)
+        {
+            for (int y = 0; y < yTiles; y++)
+            {
+                Tile currentTile = tiles[x][y];
+                if (currentTile.getTileState() == Tile.State.FLAGGED)
+                {
+                    numFlags++;
+                }
+            }
+        }
+    }
+
     public GameState getGameState()
     {
         return gameState;
     }
+
+    public int getElapsedSeconds()
+    {
+        if (startDate == null)
+        {
+            return 0;
+        }
+
+        Date currentDate = new Date();
+        long elapsedMilliseconds = currentDate.getTime() - startDate.getTime();
+        int elapsedSeconds = (int) (elapsedMilliseconds / 1000);
+        return elapsedSeconds;
+    }
+
 
     public void setGameState(GameState gameState)
     {

@@ -19,55 +19,67 @@ public class TerminalMSGame implements IBoardActionListener
 
     public void startGame()
     {
-        NonBlockingScanner scanner = new NonBlockingScanner();
-        boolean hasUserInput = true;
-        while(board.getGameState() == Board.GameState.RUNNING)
+        NonBlockingScanner scanner = null;
+        try
         {
-            if (hasUserInput || externalRefresh)
+            scanner = new NonBlockingScanner();
+            boolean hasUserInput = true;
+            while (board.getGameState() == Board.GameState.RUNNING)
             {
-                TerminalMSUtil.printBoard(board);
-                System.out.println("To open a tile enter tile coordinates in the form: x,y");
-                System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
-                System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
-                System.out.println("type back to return to menu");
-                System.out.print("Enter command: ");
-                externalRefresh = false;
-            }
-            String userInput = scanner.getUserInput();
-            if (userInput == null)
-            {
-                hasUserInput = false;
-                continue;
+                if (hasUserInput || externalRefresh)
+                {
+                    System.out.println("Flags : " + board.getNumRemainingFlags() + " Time Elapsed : " + board.getElapsedSeconds());
+                    TerminalMSUtil.printBoard(board);
+                    System.out.println("To open a tile enter tile coordinates in the form: x,y");
+                    System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
+                    System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
+                    System.out.println("type back to return to menu");
+                    System.out.print("Enter command: ");
+                    externalRefresh = false;
+                }
+                String userInput = scanner.getUserInput();
+                if (userInput == null)
+                {
+                    hasUserInput = false;
+                    continue;
+                }
+
+                hasUserInput = true;
+
+                // process command
+                if (userInput.equalsIgnoreCase("back"))
+                {
+                    return;
+                }
+                else if (userInput.startsWith("f"))
+                {
+                    String coordinatesString = userInput.substring(1);
+                    performTileOperation(Board.TileOperation.FLAG_TOGGLE, coordinatesString);
+                }
+                else if (userInput.startsWith("o"))
+                {
+                    String coordinatesString = userInput.substring(1);
+                    performTileOperation(Board.TileOperation.OPEN, coordinatesString);
+                }
             }
 
-            hasUserInput = true;
-
-            // process command
-            if (userInput.equalsIgnoreCase("back"))
+            System.out.println("\n");
+            TerminalMSUtil.printBoard(board);
+            if (board.getGameState() == Board.GameState.OVER_WIN)
             {
-                return;
+                System.out.println("Congratulations");
             }
-            else if (userInput.startsWith("f"))
+            else
             {
-                String coordinatesString = userInput.substring(1);
-                performTileOperation(Board.TileOperation.FLAG_TOGGLE, coordinatesString);
-            }
-            else if(userInput.startsWith("o"))
-            {
-                String coordinatesString = userInput.substring(1);
-                performTileOperation(Board.TileOperation.OPEN, coordinatesString);
+                System.out.println("Game lost ;(");
             }
         }
-
-        System.out.println("\n");
-        TerminalMSUtil.printBoard(board);
-        if (board.getGameState() == Board.GameState.OVER_WIN)
+        finally
         {
-            System.out.println("Congratulations");
-        }
-        else
-        {
-            System.out.println("Game lost ;(");
+            if (scanner != null)
+            {
+                scanner.close();
+            }
         }
 
     }

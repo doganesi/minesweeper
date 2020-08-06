@@ -52,6 +52,7 @@ public class NonBlockingScanner
         if (queueThread != null)
         {
             queueThread.interrupt();
+            scanner.close();
             queueThread = null;
         }
     }

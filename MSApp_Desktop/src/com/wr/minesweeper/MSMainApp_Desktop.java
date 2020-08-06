@@ -20,7 +20,7 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
         mainFrame.setJMenuBar(menuBar);
-
+        mainFrame.getContentPane().setLayout(new BorderLayout());
         menuBar.add(DesktopMenuUtil.getJMenu(mainFrame, null, mainMenu));
 
         mainFrame.setVisible(true);
@@ -31,7 +31,8 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
     {
         DesktopMSGame newGame = new DesktopMSGame(board);
         mainFrame.getContentPane().removeAll();
-        mainFrame.getContentPane().add(newGame.getBoardComponent());
+        mainFrame.getContentPane().add(newGame.getBoardComponent(), BorderLayout.CENTER);
+        mainFrame.getContentPane().add(newGame.getScoreComponent(), BorderLayout.NORTH);
         mainFrame.pack();
     }
 }
