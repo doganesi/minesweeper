@@ -20,8 +20,8 @@ public class Test
 //        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Terminal Application", Test::startTerminalApplication));
 //        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Synchronized Test", Test::startApplicationSyncTest));
 //        TerminalMenuUtil.showMenu(testMenu);
-//        startApplicationSyncTest(null);
-        startTerminalApplication(null);
+        startApplicationSyncTest(null);
+//        startTerminalApplication(null);
     }
 
     public static void startDesktopApplication(ApplicationMenuItem menuItem)

@@ -1,5 +1,7 @@
 package com.wr.util.scanner;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -10,21 +12,36 @@ public class NonBlockingScanner
     private BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private boolean closed = false;
     private Thread queueThread;
-    private Scanner scanner = new Scanner(System.in);
+
 
     public NonBlockingScanner()
     {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         queueThread = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                while (!Thread.interrupted())
+                while (!closed)
                 {
-                    String userInput = scanner.next();
-                    inputQueue.add(userInput);
+                    try
+                    {
+                        while (!br.ready())
+                        {
+                            if (closed)
+                            {
+                                return;
+                            }
+                            Thread.sleep(200);
+                        }
+                        String userInput = br.readLine();
+                        inputQueue.add(userInput);
+                    }
+                    catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
-                closed = true;
             }
         });
         queueThread.setDaemon(true);
@@ -49,11 +66,6 @@ public class NonBlockingScanner
 
     public void close()
     {
-        if (queueThread != null)
-        {
-            queueThread.interrupt();
-            scanner.close();
-            queueThread = null;
-        }
+        closed = true;
     }
 }
