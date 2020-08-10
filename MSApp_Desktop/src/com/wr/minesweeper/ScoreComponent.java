@@ -5,7 +5,8 @@ import com.wr.util.IBoardActionListener;
 import javax.swing.*;
 import java.awt.*;
 
-public class ScoreComponent extends JPanel
+public class
+ScoreComponent extends JPanel
 {
     private Board board;
     private JLabel flagCounter;
@@ -27,7 +28,7 @@ public class ScoreComponent extends JPanel
             public void run()
             {
 
-                while (true)
+                while (board.getGameState() == Board.GameState.RUNNING)
                 {
                     SwingUtilities.invokeLater(new Runnable()
                     {
@@ -47,7 +48,6 @@ public class ScoreComponent extends JPanel
                         e.printStackTrace();
                     }
                 }
-
             }
         });
         waitThread.setDaemon(true);
