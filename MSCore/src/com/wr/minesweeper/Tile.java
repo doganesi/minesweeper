@@ -1,8 +1,9 @@
 package com.wr.minesweeper;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Tile
+public class Tile implements Serializable
 {
     public enum State {FLAGGED, OPEN, CLOSED}
     public static final Color[] COLORS = new Color[] {Color.WHITE, Color.BLUE, new Color(24, 100, 40), Color.RED, Color.MAGENTA, new Color(128, 6, 6), Color.CYAN, Color.BLACK, Color.GRAY};

@@ -1,13 +1,20 @@
 package com.wr.minesweeper;
 
-import com.wr.util.menu.*;
+import com.wr.util.menu.DesktopMenuUtil;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 
 public class MSMainApp_Desktop extends MSMainApp_Abstract
 {
+
     protected JFrame mainFrame = new JFrame("Minesweeper");
+    protected JMenu runningGameMenu = new JMenu("Running Game");
+    private Board activeBoard;
 
     public MSMainApp_Desktop()
     {
@@ -22,7 +29,49 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
         mainFrame.setJMenuBar(menuBar);
         mainFrame.getContentPane().setLayout(new BorderLayout());
         menuBar.add(DesktopMenuUtil.getJMenu(mainFrame, null, mainMenu));
+        menuBar.add(runningGameMenu);
+        JMenuItem saveBoardMenuItem;
+        saveBoardMenuItem = new JMenuItem("Save Board as File");
+        saveBoardMenuItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                // Serializing current board
+                JFileChooser fc = new JFileChooser();
+                fc.addChoosableFileFilter(new FileFilter()
+                {
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        if (f.isDirectory())
+                        {
+                            return true;
+                        }
 
+                        return f.getName().endsWith(".minesweeper");
+                    }
+
+                    @Override
+                    public String getDescription()
+                    {
+                        return "Minesweeper Board Files";
+                    }
+                });
+
+                int returnVal = fc.showOpenDialog(mainFrame);
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                    File file = fc.getSelectedFile();
+                    System.out.println(file.getName());
+
+                    BoardUtil.saveBoard(activeBoard, file);
+                }
+
+            }
+        });
+        runningGameMenu.add(saveBoardMenuItem);
+        runningGameMenu.setEnabled(false);
         mainFrame.setVisible(true);
     }
 
@@ -30,9 +79,49 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
     public void loadBoard(Board board)
     {
         DesktopMSGame newGame = new DesktopMSGame(board);
+        activeBoard = board;
         mainFrame.getContentPane().removeAll();
         mainFrame.getContentPane().add(newGame.getBoardComponent(), BorderLayout.CENTER);
         mainFrame.getContentPane().add(newGame.getScoreComponent(), BorderLayout.NORTH);
         mainFrame.pack();
+        runningGameMenu.setEnabled(true);
+    }
+
+    @Override
+    public void loadGame()
+    {
+        JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new FileFilter()
+        {
+            @Override
+            public boolean accept(File f)
+            {
+                if (f.isDirectory())
+                {
+                    return true;
+                }
+
+                return f.getName().endsWith(".minesweeper");
+            }
+
+            @Override
+            public String getDescription()
+            {
+                return "Minesweeper Board Files";
+            }
+        });
+
+        int returnVal = fc.showOpenDialog(mainFrame);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fc.getSelectedFile();
+            System.out.println(file.getName());
+
+            Board loadedBoard = BoardUtil.loadBoard(file);
+            if (loadedBoard != null)
+            {
+                loadBoard(loadedBoard);
+            }
+        }
     }
 }

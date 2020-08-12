@@ -30,6 +30,13 @@ public abstract class MSMainApp_Abstract
 
         // configure mainMenu
         mainMenu.addMenuItem(new ApplicationSubMenuItem("Start Game", selectDifficultyMenu));
+        mainMenu.addMenuItem(new ApplicationMenuCommandItem("Load Game", new IMenuItemCommand() {
+            @Override
+            public void runCommand(ApplicationMenuItem menuItem)
+            {
+                loadGame();
+            }
+        }));
         mainMenu.addMenuItem(new ApplicationMenuCommandItem("Exit", new IMenuItemCommand()
         {
             @Override
@@ -49,4 +56,6 @@ public abstract class MSMainApp_Abstract
     }
 
     public abstract void loadBoard(Board board);
+
+    public abstract void loadGame();
 }

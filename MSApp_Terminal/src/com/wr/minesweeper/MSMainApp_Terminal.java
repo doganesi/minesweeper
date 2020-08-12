@@ -20,4 +20,10 @@ public class MSMainApp_Terminal extends MSMainApp_Abstract
         TerminalMSGame newGame = new TerminalMSGame(board);
         newGame.startGame();
     }
+
+    @Override
+    public void loadGame()
+    {
+
+    }
 }
