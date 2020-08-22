@@ -1,13 +1,14 @@
 package com.wr.minesweeper;
 
+import com.wr.util.file.DesktopFileHandler;
+import com.wr.util.file.IFileHandler;
 import com.wr.util.menu.DesktopMenuUtil;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
 
 public class MSMainApp_Desktop extends MSMainApp_Abstract
 {
@@ -37,36 +38,16 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // Serializing current board
-                JFileChooser fc = new JFileChooser();
-                fc.addChoosableFileFilter(new FileFilter()
+                DesktopFileHandler.handle(mainFrame, "minesweeper", true, new IFileHandler()
                 {
                     @Override
-                    public boolean accept(File f)
+                    public void handleFile(File file)
                     {
-                        if (f.isDirectory())
-                        {
-                            return true;
-                        }
-
-                        return f.getName().endsWith(".minesweeper");
-                    }
-
-                    @Override
-                    public String getDescription()
-                    {
-                        return "Minesweeper Board Files";
+                        // Serializing current board
+                        BoardUtil.saveBoard(activeBoard, file);
                     }
                 });
 
-                int returnVal = fc.showOpenDialog(mainFrame);
-                if (returnVal == JFileChooser.APPROVE_OPTION)
-                {
-                    File file = fc.getSelectedFile();
-                    System.out.println(file.getName());
-
-                    BoardUtil.saveBoard(activeBoard, file);
-                }
 
             }
         });
@@ -90,38 +71,16 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
     @Override
     public void loadGame()
     {
-        JFileChooser fc = new JFileChooser();
-        fc.addChoosableFileFilter(new FileFilter()
-        {
+        DesktopFileHandler.handle(mainFrame, "minesweeper", false, new IFileHandler() {
             @Override
-            public boolean accept(File f)
+            public void handleFile(File file)
             {
-                if (f.isDirectory())
+                Board loadedBoard = BoardUtil.loadBoard(file);
+                if (loadedBoard != null)
                 {
-                    return true;
+                    loadBoard(loadedBoard);
                 }
-
-                return f.getName().endsWith(".minesweeper");
-            }
-
-            @Override
-            public String getDescription()
-            {
-                return "Minesweeper Board Files";
             }
         });
-
-        int returnVal = fc.showOpenDialog(mainFrame);
-        if (returnVal == JFileChooser.APPROVE_OPTION)
-        {
-            File file = fc.getSelectedFile();
-            System.out.println(file.getName());
-
-            Board loadedBoard = BoardUtil.loadBoard(file);
-            if (loadedBoard != null)
-            {
-                loadBoard(loadedBoard);
-            }
-        }
     }
 }

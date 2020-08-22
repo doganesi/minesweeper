@@ -1,9 +1,12 @@
 package com.wr.minesweeper;
 
 import com.wr.util.IBoardActionListener;
+import com.wr.util.file.IFileHandler;
+import com.wr.util.file.TerminalFileHandler;
 import com.wr.util.scanner.NonBlockingScanner;
 import jdk.dynalink.NamedOperation;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class TerminalMSGame implements IBoardActionListener
@@ -33,6 +36,7 @@ public class TerminalMSGame implements IBoardActionListener
                     System.out.println("To open a tile enter tile coordinates in the form: x,y");
                     System.out.println("To flag/unflag a tile enter tile coordinates in the form: fx,y");
                     System.out.println("To open a tile/s enter tile coordinates in the form: ox,y");
+                    System.out.println("type save to save your current game");
                     System.out.println("type back to return to menu");
                     System.out.print("Enter command: ");
                     externalRefresh = false;
@@ -50,6 +54,16 @@ public class TerminalMSGame implements IBoardActionListener
                 if (userInput.equalsIgnoreCase("back"))
                 {
                     return;
+                }
+                else if (userInput.equalsIgnoreCase("save"))
+                {
+                    TerminalFileHandler.handleFile("Save current game", "minesweeper", true, new IFileHandler() {
+                        @Override
+                        public void handleFile(File file)
+                        {
+                            BoardUtil.saveBoard(board, file);
+                        }
+                    });
                 }
                 else if (userInput.startsWith("f"))
                 {
