@@ -1,10 +1,11 @@
 package com.wr.minesweeper;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class BoardUtil
 {
-    public static boolean saveBoard(Board board, File file)
+    public static boolean saveBoardBinary(Board board, File file)
     {
         try
         {
@@ -24,7 +25,7 @@ public class BoardUtil
         return false;
     }
 
-    public static Board loadBoard(File file)
+    public static Board loadBoardBinary(File file)
     {
         try
         {
@@ -47,4 +48,43 @@ public class BoardUtil
         return null;
 
     }
+
+    public static boolean saveBoard(Board board, File file)
+    {
+
+        try
+        {
+            String boardString = Board.saveBoardToString(board);
+            Files.writeString(file.toPath(), boardString);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static Board loadBoard(File file)
+    {
+        try
+        {
+            String savedBoardString = Files.readString(file.toPath());
+            Board loadedBoard = Board.loadBoardFromString(savedBoardString);
+
+            loadedBoard.initListeners();
+
+            return loadedBoard;
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+
 }

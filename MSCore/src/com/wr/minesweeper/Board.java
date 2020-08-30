@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Board implements Serializable
 {
+    private static String DELIMITER = "|";
+
     public enum GameState {RUNNING, OVER_WIN, OVER_LOSE}
     public enum TileOperation {FLAG_TOGGLE, OPEN}
 
@@ -18,7 +20,6 @@ public class Board implements Serializable
     private int numMines;
     private int numFlags;
     private Date startDate;
-    private String name;
     private Tile[][] tiles;
     private GameState gameState = GameState.RUNNING;
     private transient List<IBoardActionListener> actionListeners = new ArrayList<>();
@@ -37,6 +38,75 @@ public class Board implements Serializable
         this.yTiles = yTiles;
         this.numMines = numMines;
         initBoard();
+    }
+
+    private Board()
+    {
+
+    }
+
+    public static String saveBoardToString(Board board)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(board.xTiles).append(DELIMITER);
+        sb.append(board.yTiles).append(DELIMITER);
+        sb.append(board.numMines).append(DELIMITER);
+        sb.append(board.numFlags).append(DELIMITER);
+        if (board.startDate != null)
+        {
+            long elapsedMillis = new Date().getTime() - board.startDate.getTime();
+            sb.append(elapsedMillis);
+        }
+        sb.append(DELIMITER);
+        sb.append(board.gameState).append(DELIMITER);
+
+        for (int x = 0; x < board.xTiles; x++)
+        {
+            for (int y = 0; y < board.yTiles; y++)
+            {
+                Tile tile = board.tiles[x][y];
+                sb.append(Tile.saveTileToString(tile));
+                sb.append(DELIMITER);
+            }
+        }
+
+        return sb.toString();
+    }
+    public static Board loadBoardFromString(String string)
+    {
+        String[] savedTokens = string.split("\\"+DELIMITER);
+        Board loadedBoard = new Board();
+
+        loadedBoard.xTiles = Integer.parseInt(savedTokens[0]);
+        loadedBoard.yTiles = Integer.parseInt(savedTokens[1]);
+        loadedBoard.numMines = Integer.parseInt(savedTokens[2]);
+        loadedBoard.numFlags = Integer.parseInt(savedTokens[3]);
+        String elapsedString = savedTokens[4];
+        if (elapsedString.length() > 0)
+        {
+            Long elapsedMillis = Long.parseLong(savedTokens[4]);
+            Date savedDate = new Date(System.currentTimeMillis() - elapsedMillis);
+            loadedBoard.startDate = savedDate;
+        }
+        loadedBoard.gameState = GameState.valueOf(savedTokens[5]);
+
+        int counter = 6;
+        loadedBoard.tiles = new Tile[loadedBoard.xTiles][loadedBoard.yTiles];
+
+        for (int x = 0; x < loadedBoard.xTiles; x++)
+        {
+            for (int y = 0; y < loadedBoard.yTiles; y++)
+            {
+                String tokenString = savedTokens[counter++];
+                Tile tile = Tile.loadTileFromString(tokenString, loadedBoard);
+                loadedBoard.tiles[x][y] = tile;
+
+            }
+        }
+
+
+        return loadedBoard;
     }
 
     public void initListeners()
@@ -181,15 +251,6 @@ public class Board implements Serializable
         }
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
 
     public void calcNumMinesAround()
     {

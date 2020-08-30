@@ -18,7 +18,7 @@ public class DesktopFileHandler
         {
             fc.setApproveButtonText("Load");
         }
-        fc.addChoosableFileFilter(new FileFilter()
+        FileFilter ff = new FileFilter()
         {
             @Override
             public boolean accept(File f)
@@ -36,12 +36,18 @@ public class DesktopFileHandler
             {
                 return "*." + extension + " files";
             }
-        });
+        };
+        fc.addChoosableFileFilter(ff);
+        fc.setFileFilter(ff);
 
         int returnVal = fc.showOpenDialog(parentComponent);
         if (returnVal == JFileChooser.APPROVE_OPTION)
         {
             File file = fc.getSelectedFile();
+            if (isSave && !file.getAbsolutePath().endsWith(extension))
+            {
+                file = new File(file.getAbsolutePath() + "." + extension);
+            }
             fileHandler.handleFile(file);
         }
     }
