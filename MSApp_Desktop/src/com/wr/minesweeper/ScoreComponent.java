@@ -8,12 +8,12 @@ import java.awt.*;
 public class
 ScoreComponent extends JPanel
 {
-    private Board board;
+    private IBoard board;
     private JLabel flagCounter;
     private JLabel timeElapsed;
     private Thread waitThread;
 
-    public ScoreComponent(Board board)
+    public ScoreComponent(IBoard board)
     {
         this.board = board;
         this.flagCounter = new JLabel("099");
@@ -28,7 +28,7 @@ ScoreComponent extends JPanel
             public void run()
             {
 
-                while (board.getGameState() == Board.GameState.RUNNING)
+                while (board.getGameState() == IBoard.GameState.RUNNING)
                 {
                     SwingUtilities.invokeLater(new Runnable()
                     {

@@ -9,7 +9,7 @@ import static com.wr.util.array.TerminalArrayUtil.*;
 
 public class TerminalMSUtil
 {
-    public static void printBoard(Board board)
+    public static void printBoard(IBoard board)
     {
         char[][] baseBoard = new char[board.getXTiles()][board.getYTiles()];
         Color[][] baseBoardColors = new Color[board.getXTiles()][board.getYTiles()];
@@ -23,7 +23,7 @@ public class TerminalMSUtil
                 Tile currentTile = board.getTile(x, y);
 
 
-                if (currentTile.getBoard().getGameState() == Board.GameState.RUNNING)
+                if (currentTile.getBoard().getGameState() == IBoard.GameState.RUNNING)
                 {
                     if (currentTile.getTileState() == Tile.State.CLOSED)
                     {
@@ -41,7 +41,7 @@ public class TerminalMSUtil
                     }
 
                 }
-                else if (currentTile.getBoard().getGameState() == Board.GameState.OVER_LOSE)
+                else if (currentTile.getBoard().getGameState() == IBoard.GameState.OVER_LOSE)
                 {
                     if (currentTile.isHasMine())
                     {
@@ -59,7 +59,7 @@ public class TerminalMSUtil
                         return '\u25A1';
                     }
                 }
-                else if (currentTile.getBoard().getGameState() == Board.GameState.OVER_WIN)
+                else if (currentTile.getBoard().getGameState() == IBoard.GameState.OVER_WIN)
                 {
                     if (currentTile.isHasMine())
                     {

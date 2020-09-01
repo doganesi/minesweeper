@@ -49,12 +49,21 @@ public class BoardUtil
 
     }
 
-    public static boolean saveBoard(Board board, File file)
+    public static boolean saveBoard(IBoard board, File file)
     {
+        Board actualBoard = null;
+        if (board instanceof Board)
+        {
+            actualBoard = (Board) board;
+        }
+        else
+        {
+            return false;
+        }
 
         try
         {
-            String boardString = Board.saveBoardToString(board);
+            String boardString = Board.saveBoardToString(actualBoard);
             Files.writeString(file.toPath(), boardString);
             return true;
         }
@@ -66,7 +75,7 @@ public class BoardUtil
         return false;
     }
 
-    public static Board loadBoard(File file)
+    public static IBoard loadBoard(File file)
     {
         try
         {

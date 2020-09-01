@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Board implements Serializable
+public class Board implements Serializable, IBoard
 {
     private static String DELIMITER = "|";
 
-    public enum GameState {RUNNING, OVER_WIN, OVER_LOSE}
-    public enum TileOperation {FLAG_TOGGLE, OPEN}
 
     private int xTiles;
     private int yTiles;

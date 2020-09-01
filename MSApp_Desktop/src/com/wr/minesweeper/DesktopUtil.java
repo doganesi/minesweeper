@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class DesktopUtil
 {
-    public static void drawBoard(Board board)
+    public static void drawBoard(IBoard board)
     {
         JFrame mainFrame = new JFrame("Minesweeper");
 //        mainFrame.setSize(new Dimension(550, 250));
@@ -18,7 +18,7 @@ public class DesktopUtil
 
     }
 
-    public static void drawBoards(Board[] boards)
+    public static void drawBoards(IBoard[] boards)
     {
         JFrame mainFrame = new JFrame("Minesweeper");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -28,7 +28,7 @@ public class DesktopUtil
 
         for (int i = 0; i < boards.length; i++)
         {
-            Board board = boards[i];
+            IBoard board = boards[i];
             BoardComponent boardComponent = new BoardComponent(board, 50);
             boardContainer.add(boardComponent);
         }

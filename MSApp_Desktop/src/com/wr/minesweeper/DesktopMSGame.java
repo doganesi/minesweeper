@@ -2,12 +2,12 @@ package com.wr.minesweeper;
 
 public class DesktopMSGame
 {
-    private Board board;
+    private IBoard board;
     private BoardComponent boardComponent;
     private ScoreComponent scoreComponent;
 
 
-    public DesktopMSGame(Board board)
+    public DesktopMSGame(IBoard board)
     {
         this.board = board;
         this.boardComponent = new BoardComponent(board, 20);

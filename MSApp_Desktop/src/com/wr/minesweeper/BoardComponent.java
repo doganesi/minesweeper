@@ -13,11 +13,11 @@ public class BoardComponent extends JComponent implements IBoardActionListener
     private int tileSizePX;
     private int widthPX;
     private int heightPX;
-    private Board board;
+    private IBoard board;
     private TileDrawer tileDrawer = new TileDrawer();
 
 
-    public BoardComponent(Board board, int tileSizePX)
+    public BoardComponent(IBoard board, int tileSizePX)
     {
         this.board = board;
         this.tileSizePX = tileSizePX;
@@ -31,11 +31,11 @@ public class BoardComponent extends JComponent implements IBoardActionListener
             {
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    performTileOperation(Board.TileOperation.FLAG_TOGGLE, e.getX(), e.getY());
+                    performTileOperation(IBoard.TileOperation.FLAG_TOGGLE, e.getX(), e.getY());
                 }
                 else if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    performTileOperation(Board.TileOperation.OPEN, e.getX(), e.getY());
+                    performTileOperation(IBoard.TileOperation.OPEN, e.getX(), e.getY());
                 }
             }
         });
@@ -61,7 +61,7 @@ public class BoardComponent extends JComponent implements IBoardActionListener
         return tileY;
     }
 
-    public void performTileOperation(Board.TileOperation tileOperation, int mouseXCoordinate, int mouseYCoordinate)
+    public void performTileOperation(IBoard.TileOperation tileOperation, int mouseXCoordinate, int mouseYCoordinate)
     {
         // 0-based tile coordinates in the board
         int tileX = getTileXFromMouseX(mouseXCoordinate);
@@ -111,7 +111,7 @@ public class BoardComponent extends JComponent implements IBoardActionListener
     }
 
     @Override
-    public void refresh(Board.TileOperation tileOperation, int x, int y)
+    public void refresh(IBoard.TileOperation tileOperation, int x, int y)
     {
         invalidate();
         repaint();
@@ -129,7 +129,7 @@ public class BoardComponent extends JComponent implements IBoardActionListener
             int charY = (int) ((heightPX-charSizeH)/2 + heightPX/1.5);
 
 
-            if (tile.getBoard().getGameState() == Board.GameState.RUNNING)
+            if (tile.getBoard().getGameState() == IBoard.GameState.RUNNING)
             {
                 if (tile.getTileState() == Tile.State.CLOSED)
                 {
@@ -151,7 +151,7 @@ public class BoardComponent extends JComponent implements IBoardActionListener
                     g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, charX, charY);
                 }
             }
-            else if (tile.getBoard().getGameState() == Board.GameState.OVER_LOSE)
+            else if (tile.getBoard().getGameState() == IBoard.GameState.OVER_LOSE)
             {
                 if (tile.isHasMine())
                 {
@@ -169,7 +169,7 @@ public class BoardComponent extends JComponent implements IBoardActionListener
                 }
 
             }
-            else if(tile.getBoard().getGameState() == Board.GameState.OVER_WIN)
+            else if(tile.getBoard().getGameState() == IBoard.GameState.OVER_WIN)
             {
                 if (tile.isHasMine())
                 {
@@ -186,47 +186,6 @@ public class BoardComponent extends JComponent implements IBoardActionListener
                     g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, charX, charY);
                 }
             }
-//            if (tile.getBoard().getGameState() == Board.GameState.DEBUG)
-//            {
-//                if (tile.isHasMine())
-//                {
-//                    g.setColor(Color.BLACK);
-//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                }
-//                else
-//                {
-//                    g.setColor(tile.getNumMinesAroundColor());
-//                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, 15, 15);
-//                }
-//
-//            }
-//            else
-//            {
-//                if (tile.getBoard().getGameState() == Board.GameState.OVER && tile.isHasMine())
-//                {
-//                    g.setColor(Color.BLACK);
-//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                }
-//                if (tile.getTileState() == Tile.State.FLAGGED)
-//                {
-//                    g.setColor(Color.RED);
-//                    g.drawRoundRect(tileIndent, tileIndent, widthPX - tileIndent * 2 , heightPX - tileIndent * 2, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                }
-//                else if (tile.isHasMine())
-//                {
-//                    g.setColor(Color.BLACK);
-//                    g.drawOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                    g.fillOval(tileIndent, tileIndent, widthPX - tileIndent * 2, heightPX - tileIndent * 2);
-//                }
-//                else
-//                {
-//                    g.setColor(tile.getNumMinesAroundColor());
-//                    g.drawChars(new char[] {tile.getNumMinesAroundChar()}, 0, 1, 15, 15);
-//                }
-//
-//            }
         }
     }
 }

@@ -19,7 +19,7 @@ public class MSMainApp_Terminal extends MSMainApp_Abstract
     }
 
     @Override
-    public void loadBoard(Board board)
+    public void loadBoard(IBoard board)
     {
         TerminalMSGame newGame = new TerminalMSGame(board);
         newGame.startGame();
@@ -33,7 +33,7 @@ public class MSMainApp_Terminal extends MSMainApp_Abstract
             @Override
             public void handleFile(File file)
             {
-                Board loadedBoard = BoardUtil.loadBoard(file);
+                IBoard loadedBoard = BoardUtil.loadBoard(file);
                 if (loadedBoard != null)
                 {
                     loadBoard(loadedBoard);

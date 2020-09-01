@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 public class TerminalMSGame implements IBoardActionListener
 {
-    private Board board;
+    private IBoard board;
     private boolean externalRefresh = false;
 
-    public TerminalMSGame(Board board)
+    public TerminalMSGame(IBoard board)
     {
         this.board = board;
         board.addActionListener(this);
@@ -27,7 +27,7 @@ public class TerminalMSGame implements IBoardActionListener
         {
             scanner = new NonBlockingScanner();
             boolean hasUserInput = true;
-            while (board.getGameState() == Board.GameState.RUNNING)
+            while (board.getGameState() == IBoard.GameState.RUNNING)
             {
                 if (hasUserInput || externalRefresh)
                 {
@@ -68,18 +68,18 @@ public class TerminalMSGame implements IBoardActionListener
                 else if (userInput.startsWith("f"))
                 {
                     String coordinatesString = userInput.substring(1);
-                    performTileOperation(Board.TileOperation.FLAG_TOGGLE, coordinatesString);
+                    performTileOperation(IBoard.TileOperation.FLAG_TOGGLE, coordinatesString);
                 }
                 else if (userInput.startsWith("o"))
                 {
                     String coordinatesString = userInput.substring(1);
-                    performTileOperation(Board.TileOperation.OPEN, coordinatesString);
+                    performTileOperation(IBoard.TileOperation.OPEN, coordinatesString);
                 }
             }
 
             System.out.println("\n");
             TerminalMSUtil.printBoard(board);
-            if (board.getGameState() == Board.GameState.OVER_WIN)
+            if (board.getGameState() == IBoard.GameState.OVER_WIN)
             {
                 System.out.println("Congratulations");
             }
@@ -98,7 +98,7 @@ public class TerminalMSGame implements IBoardActionListener
 
     }
 
-    public void performTileOperation(Board.TileOperation tileOperation, String coordinatesString)
+    public void performTileOperation(IBoard.TileOperation tileOperation, String coordinatesString)
     {
         System.out.println("coordinatesString: " + coordinatesString);
         String[] coordinatesTokens = coordinatesString.split(",");
@@ -135,7 +135,7 @@ public class TerminalMSGame implements IBoardActionListener
     }
 
     @Override
-    public void refresh(Board.TileOperation tileOperation, int x, int y)
+    public void refresh(IBoard.TileOperation tileOperation, int x, int y)
     {
         externalRefresh = true;
         System.out.println("\n");

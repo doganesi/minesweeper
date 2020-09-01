@@ -55,7 +55,7 @@ public abstract class MSMainApp_Abstract
         loadBoard(board);
     }
 
-    public abstract void loadBoard(Board board);
+    public abstract void loadBoard(IBoard board);
 
     public abstract void loadGame();
 }

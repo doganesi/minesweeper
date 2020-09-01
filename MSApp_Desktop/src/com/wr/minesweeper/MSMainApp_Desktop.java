@@ -15,7 +15,7 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
 
     protected JFrame mainFrame = new JFrame("Minesweeper");
     protected JMenu runningGameMenu = new JMenu("Running Game");
-    private Board activeBoard;
+    private IBoard activeBoard;
 
     public MSMainApp_Desktop()
     {
@@ -57,7 +57,7 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
     }
 
     @Override
-    public void loadBoard(Board board)
+    public void loadBoard(IBoard board)
     {
         DesktopMSGame newGame = new DesktopMSGame(board);
         activeBoard = board;
@@ -75,7 +75,7 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
             @Override
             public void handleFile(File file)
             {
-                Board loadedBoard = BoardUtil.loadBoard(file);
+                IBoard loadedBoard = BoardUtil.loadBoard(file);
                 if (loadedBoard != null)
                 {
                     loadBoard(loadedBoard);
