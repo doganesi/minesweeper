@@ -5,7 +5,10 @@ import com.wr.util.menu.*;
 public abstract class MSMainApp_Abstract
 {
     protected ApplicationMenu mainMenu             = new ApplicationMenu("Minesweeper Game");
+    protected ApplicationMenu startGameMenu        = new ApplicationMenu("Start Game");
+    protected ApplicationMenu multiplayerMenu        = new ApplicationMenu("Multiplayer");
     protected ApplicationMenu selectDifficultyMenu = new ApplicationMenu("Select Difficulty Level");
+    protected ApplicationMenu selectDifficultyMenuHost = new ApplicationMenu("Select Difficulty Level");
 
     public MSMainApp_Abstract()
     {
@@ -26,10 +29,33 @@ public abstract class MSMainApp_Abstract
                     loadLevel(difficulty);
                 }
             }));
+            selectDifficultyMenuHost.addMenuItem(new ApplicationMenuCommandItem(difficulty.getName(), new IMenuItemCommand()
+            {
+                @Override
+                public void runCommand(ApplicationMenuItem menuItem)
+                {
+                    // do nothing so far
+                }
+            }));
         }
 
         // configure mainMenu
-        mainMenu.addMenuItem(new ApplicationSubMenuItem("Start Game", selectDifficultyMenu));
+        mainMenu.addMenuItem(new ApplicationSubMenuItem(null, startGameMenu));
+        {
+            startGameMenu.addMenuItem(new ApplicationSubMenuItem("Single Player", selectDifficultyMenu));
+            startGameMenu.addMenuItem(new ApplicationSubMenuItem(null, multiplayerMenu));
+            {
+                multiplayerMenu.addMenuItem(new ApplicationSubMenuItem("Host Game", selectDifficultyMenuHost));
+                multiplayerMenu.addMenuItem(new ApplicationMenuCommandItem("Join Game", new IMenuItemCommand()
+                {
+                    @Override
+                    public void runCommand(ApplicationMenuItem menuItem)
+                    {
+
+                    }
+                }));
+            }
+        }
         mainMenu.addMenuItem(new ApplicationMenuCommandItem("Load Game", new IMenuItemCommand() {
             @Override
             public void runCommand(ApplicationMenuItem menuItem)

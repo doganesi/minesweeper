@@ -33,7 +33,12 @@ public class TerminalMenuUtil
             for (int i = 0; i < menuItems.size(); i++)
             {
                 ApplicationMenuItem menuItem = menuItems.get(i);
-                System.out.println((i + 1) + ") " + menuItem.getName());
+                String name = menuItem.getName();
+                if (name == null && menuItem instanceof ApplicationSubMenuItem)
+                {
+                    name = ((ApplicationSubMenuItem)menuItem).getApplicationMenu().getName();
+                }
+                System.out.println((i + 1) + ") " + name);
             }
 
             int backOptionUserIndex = menuItems.size() + 1;
