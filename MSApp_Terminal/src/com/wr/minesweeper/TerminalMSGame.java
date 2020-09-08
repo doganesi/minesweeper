@@ -4,10 +4,8 @@ import com.wr.util.IBoardActionListener;
 import com.wr.util.file.IFileHandler;
 import com.wr.util.file.TerminalFileHandler;
 import com.wr.util.scanner.NonBlockingScanner;
-import jdk.dynalink.NamedOperation;
 
 import java.io.File;
-import java.util.Scanner;
 
 public class TerminalMSGame implements IBoardActionListener
 {

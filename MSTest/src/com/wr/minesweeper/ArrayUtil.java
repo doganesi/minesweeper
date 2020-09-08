@@ -30,28 +30,28 @@ public class ArrayUtil
         }
     }
 
-    public static class NumberPrinter implements IntArrayCellHandler
-    {
-        int handleableDigitAmount;
-
-        public NumberPrinter(int digitAmount)
-        {
-            handleableDigitAmount = digitAmount;
-        }
-
-        @Override
-        public int handle(int currentValue, int x, int y, int maxX, int maxY)
-        {
-            String printout = String.valueOf(currentValue);
-            System.out.print(" ".repeat(handleableDigitAmount - printout.length()) + printout + " ");
-
-            if (x == maxX)
-            {
-                System.out.print('\n');
-            }
-            return currentValue;
-        }
-    }
+//    public static class NumberPrinter implements IntArrayCellHandler
+//    {
+//        int handleableDigitAmount;
+//
+//        public NumberPrinter(int digitAmount)
+//        {
+//            handleableDigitAmount = digitAmount;
+//        }
+//
+//        @Override
+//        public int handle(int currentValue, int x, int y, int maxX, int maxY)
+//        {
+//            String printout = String.valueOf(currentValue);
+//            System.out.print(" ".repeat(handleableDigitAmount - printout.length()) + printout + " ");
+//
+//            if (x == maxX)
+//            {
+//                System.out.print('\n');
+//            }
+//            return currentValue;
+//        }
+//    }
 
     public static class SimpleCellFiller implements IntArrayCellHandler
     {
@@ -81,14 +81,14 @@ public class ArrayUtil
     public static void main(String[] args)
     {
         int[][] testArr = new int[50][50];
-        NumberPrinter numberPrinter = new NumberPrinter(4);
+//        NumberPrinter numberPrinter = new NumberPrinter(4);
         SimpleCellFiller simpleCellFiller = new SimpleCellFiller(2);
         IncrementalCellFiller incrementalCellFiller = new IncrementalCellFiller();
 
 //        iterate2DIntArray(testArr, simpleCellFiller);
 //        iterate2DIntArray(testArr, numberPrinter);
         iterate2DIntArray(testArr, incrementalCellFiller);
-        iterate2DIntArray(testArr, numberPrinter);
+//        iterate2DIntArray(testArr, numberPrinter);
     }
 
 

@@ -1,6 +1,7 @@
 package com.wr.util.scanner;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
@@ -16,7 +17,12 @@ public class NonBlockingScanner
 
     public NonBlockingScanner()
     {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        this(System.in);
+    }
+
+    public NonBlockingScanner(InputStream inputStream)
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         queueThread = new Thread(new Runnable()
         {
             @Override
@@ -26,7 +32,7 @@ public class NonBlockingScanner
                 {
                     try
                     {
-                        while (!br.ready())
+                        while (inputStream.available() == 0)
                         {
                             if (closed)
                             {

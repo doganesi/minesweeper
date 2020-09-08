@@ -5,6 +5,7 @@ import com.wr.util.file.TerminalFileHandler;
 import com.wr.util.menu.TerminalMenuUtil;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class MSMainApp_Terminal extends MSMainApp_Abstract
 {
@@ -16,6 +17,21 @@ public class MSMainApp_Terminal extends MSMainApp_Abstract
     public void start()
     {
         TerminalMenuUtil.showMenu(mainMenu);
+    }
+
+    @Override
+    protected void reportError(String error)
+    {
+        System.err.println("Error: " + error);
+    }
+
+    @Override
+    protected String getServerIP()
+    {
+        System.out.println("Enter Game Host's IP Address : ");
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.next();
+        return userInput;
     }
 
     @Override

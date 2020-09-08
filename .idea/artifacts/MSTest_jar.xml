@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MSTest:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MSTest_jar</output-path>
+    <root id="archive" name="MSTest.jar">
+      <element id="module-output" name="MSTest" />
+      <element id="module-output" name="MSApp_Terminal" />
+      <element id="module-output" name="MSCore" />
+      <element id="module-output" name="MSApp_Desktop" />
+    </root>
+  </artifact>
+</component>

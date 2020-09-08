@@ -2,6 +2,8 @@ package com.wr.minesweeper;
 
 import com.wr.util.menu.*;
 
+import java.io.IOException;
+
 public abstract class MSMainApp_Abstract
 {
     protected ApplicationMenu mainMenu             = new ApplicationMenu("Minesweeper Game");
@@ -34,7 +36,7 @@ public abstract class MSMainApp_Abstract
                 @Override
                 public void runCommand(ApplicationMenuItem menuItem)
                 {
-                    // do nothing so far
+                    loadLevelServer(difficulty);
                 }
             }));
         }
@@ -51,7 +53,34 @@ public abstract class MSMainApp_Abstract
                     @Override
                     public void runCommand(ApplicationMenuItem menuItem)
                     {
-
+                        String ipAddress = getServerIP();
+                        if (ipAddress == null || ipAddress.length() == 0)
+                        {
+                            reportError("Invalid Address");
+                            return;
+                        }
+                        try
+                        {
+                            BoardClient clientBoard = new BoardClient(ipAddress);
+                            while(!clientBoard.isReady())
+                            {
+                                System.out.println("waiting");
+                                try
+                                {
+                                    Thread.sleep(1000);
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                            loadBoard(clientBoard);
+                        }
+                        catch (IOException ioException)
+                        {
+                            ioException.printStackTrace();
+                            reportError(ioException.getMessage());
+                        }
                     }
                 }));
             }
@@ -80,6 +109,24 @@ public abstract class MSMainApp_Abstract
         Board board = new Board(difficulty);
         loadBoard(board);
     }
+
+    public void loadLevelServer(Difficulty difficulty)
+    {
+        try
+        {
+            BoardServer board = new BoardServer(difficulty);
+            loadBoard(board);
+        }
+        catch (IOException ioException)
+        {
+            ioException.printStackTrace();
+            reportError(ioException.getMessage());
+        }
+    }
+
+    protected abstract String getServerIP();
+
+    protected abstract void reportError(String error);
 
     public abstract void loadBoard(IBoard board);
 

@@ -4,6 +4,9 @@ import com.wr.util.IBoardActionListener;
 
 public interface IBoard 
 {
+    public enum GameState {RUNNING, OVER_WIN, OVER_LOSE}
+    public enum TileOperation {FLAG_TOGGLE, OPEN}
+
     int getXTiles();
 
     int getYTiles();
@@ -19,8 +22,5 @@ public interface IBoard
     int getElapsedSeconds();
 
     int getNumRemainingFlags();
-
-    public enum GameState {RUNNING, OVER_WIN, OVER_LOSE}
-    public enum TileOperation {FLAG_TOGGLE, OPEN}
 
 }

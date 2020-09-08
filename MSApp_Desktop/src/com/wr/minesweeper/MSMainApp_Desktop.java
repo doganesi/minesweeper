@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Scanner;
 
 public class MSMainApp_Desktop extends MSMainApp_Abstract
 {
@@ -54,6 +55,18 @@ public class MSMainApp_Desktop extends MSMainApp_Abstract
         runningGameMenu.add(saveBoardMenuItem);
         runningGameMenu.setEnabled(false);
         mainFrame.setVisible(true);
+    }
+
+    @Override
+    protected String getServerIP()
+    {
+        return JOptionPane.showInputDialog(mainFrame, "Enter Game Host's IP Address");
+    }
+
+    @Override
+    protected void reportError(String error)
+    {
+        JOptionPane.showMessageDialog(mainFrame, error, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override

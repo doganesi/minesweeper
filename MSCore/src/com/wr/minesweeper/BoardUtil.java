@@ -64,7 +64,7 @@ public class BoardUtil
         try
         {
             String boardString = Board.saveBoardToString(actualBoard);
-            Files.writeString(file.toPath(), boardString);
+            Files.write(file.toPath(), boardString.getBytes());
             return true;
         }
         catch (Exception exception)
@@ -79,7 +79,8 @@ public class BoardUtil
     {
         try
         {
-            String savedBoardString = Files.readString(file.toPath());
+            byte[] savedBoard = Files.readAllBytes(file.toPath());
+            String savedBoardString = new String(savedBoard);
             Board loadedBoard = Board.loadBoardFromString(savedBoardString);
 
             loadedBoard.initListeners();

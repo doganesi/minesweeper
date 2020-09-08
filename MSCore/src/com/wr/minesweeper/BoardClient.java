@@ -1,11 +1,26 @@
 package com.wr.minesweeper;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class BoardClient extends BoardProxy
 {
-    private String serverAddress;
+    protected String serverAddress;
 
-    private int Placeholder()
+    public BoardClient(String serverAddress) throws IOException
     {
-        return 0;
+        this.serverAddress = serverAddress;
+        createTubes();
+    }
+
+    @Override
+    protected Socket createSocket() throws IOException
+    {
+        return new Socket(serverAddress, PORT_NUMBER);
+    }
+
+    public boolean isReady()
+    {
+        return actualBoard != null;
     }
 }
