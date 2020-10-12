@@ -3,11 +3,14 @@ package com.wr.minesweeper;
 import com.wr.util.IBoardActionListener;
 import com.wr.util.scanner.NonBlockingScanner;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class BoardProxy implements IBoard
 {
@@ -15,12 +18,7 @@ public abstract class BoardProxy implements IBoard
 
     protected Board actualBoard;
     private transient List<IBoardActionListener> actionListeners = new ArrayList<>();
-    protected boolean isRunning  = true;
-    protected boolean needsSendUpdate = false;
-    private PrintWriter sender;
-    private NonBlockingScanner receiver;
-    private Thread sendReceiveThread;
-
+    protected  boolean needsSendUpdate;
 
     public BoardProxy()
     {
@@ -28,7 +26,7 @@ public abstract class BoardProxy implements IBoard
 
     protected void createTubes()
     {
-        sendReceiveThread = new Thread(new Runnable()
+        Thread sendReceiveThread = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -36,25 +34,38 @@ public abstract class BoardProxy implements IBoard
                 try
                 {
                     Socket socket = createSocket();
-                    sender = new PrintWriter(socket.getOutputStream(), true);
-                    receiver = new NonBlockingScanner(socket.getInputStream());
+                    PrintWriter sender = new PrintWriter(socket.getOutputStream(), true);
+                    NonBlockingScanner receiver = new NonBlockingScanner(socket.getInputStream());
 
-                    while(isRunning)
+                    while(true)
                     {
-                        if (needsSendUpdate)
+                        synchronized (this)
                         {
-                            String boardInfo = Board.saveBoardToString(actualBoard);
-                            System.out.println(BoardProxy.this.getClass().getName() + " [Sending] - " + boardInfo);
-                            sender.println(boardInfo);
-                            needsSendUpdate = false;
+                            if (needsSendUpdate)
+                            {
+                                String boardInfo = Board.saveBoardToString(actualBoard);
+                                sender.println(boardInfo);
+                                needsSendUpdate = false;
+                            }
+                            String infoFromPeer = receiver.getUserInput();
+                            if (infoFromPeer != null)
+                            {
+                                actualBoard = Board.loadBoardFromString(infoFromPeer);
+                                SwingUtilities.invokeLater(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        alertListeners(null, -1, -1);
+                                    }
+                                });
+                            }
+                            if (actualBoard != null && actualBoard.getGameState() != GameState.RUNNING && !needsSendUpdate)
+                            {
+                                break;
+                            }
                         }
-                        String infoFromPeer = receiver.getUserInput();
-                        if (infoFromPeer != null)
-                        {
-                            System.out.println(BoardProxy.this.getClass().getName() + " [Receiving] - " + infoFromPeer);
-                            actualBoard = Board.loadBoardFromString(infoFromPeer);
-                            alertListeners(null, -1, -1);
-                        }
+
                     }
                 }
                 catch (IOException ioException)
@@ -98,9 +109,12 @@ public abstract class BoardProxy implements IBoard
     @Override
     public void performTileOperation(TileOperation tileOperation, int tileX, int tileY)
     {
-        actualBoard.performTileOperation(tileOperation, tileX, tileY);
+        synchronized (this)
+        {
+            actualBoard.performTileOperation(tileOperation, tileX, tileY);
+            needsSendUpdate = true;
+        }
         alertListeners(tileOperation, tileX, tileY);
-        needsSendUpdate = true;
     }
 
     @Override

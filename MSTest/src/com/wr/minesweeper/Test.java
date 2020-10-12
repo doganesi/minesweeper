@@ -16,11 +16,11 @@ public class Test
 
     public static void main(String[] args)
     {
-//        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Desktop Application", Test::startDesktopApplication));
-//        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Terminal Application", Test::startTerminalApplication));
+        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Desktop Application", Test::startDesktopApplication));
+        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Terminal Application", Test::startTerminalApplication));
 //        testMenu.addMenuItem(new ApplicationMenuCommandItem("Start Synchronized Test", Test::startApplicationSyncTest));
-//        TerminalMenuUtil.showMenu(testMenu);
-        startDesktopApplication(null);
+        TerminalMenuUtil.showMenu(testMenu);
+//        startDesktopApplication(null);
 //        startTerminalApplication(null);
     }
 
